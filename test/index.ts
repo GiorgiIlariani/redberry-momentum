@@ -268,3 +268,32 @@
 //     return null;
 //   }
 // };
+
+// <FormField
+//                   control={form.control}
+//                   name="status_id"
+//                   render={({ field }) => (
+//                     <FormItem>
+//                       <FormLabel className="text-base font-medium text-[#343A40]">
+//                         დეპარტამენტი*
+//                       </FormLabel>
+//                       <FormControl>
+//                         <Select
+//                           onValueChange={field.onChange}
+//                           defaultValue={field.value?.toString()}
+//                         >
+//                           <SelectTrigger className="w-full">
+//                             <SelectValue placeholder="დიზაინის დეპარტამენტი" />
+//                           </SelectTrigger>
+//                           <SelectContent>
+//                             {departments.map((option) => (
+//                               <SelectItem key={option.id} value={option.name}>
+//                                 {option.name}
+//                               </SelectItem>
+//                             ))}
+//                           </SelectContent>
+//                         </Select>
+//                       </FormControl>
+//                     </FormItem>
+//                   )}
+//                 />

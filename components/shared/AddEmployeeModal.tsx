@@ -6,7 +6,6 @@ import {
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
 import AddEmployeeForm from "./AddEmployeeForm";
 
 export function AddEmployeeModal() {
@@ -17,7 +16,7 @@ export function AddEmployeeModal() {
       </DialogTrigger>
       <DialogContent className="bg-white min-w-[913px] h-[766px] rounded-[10px]">
         <div className="w-full">
-          <DialogTitle className="text-[#021526] font-medium text-[32px] text-center pt-[117px]">
+          <DialogTitle className="text-[#021526] font-medium text-[32px] text-center pt-[67px]">
             თანამშრომლის შექმნა
           </DialogTitle>
         </div>

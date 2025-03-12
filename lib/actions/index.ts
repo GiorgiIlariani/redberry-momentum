@@ -1,5 +1,4 @@
 const API_URL = "https://momentum.redberryinternship.ge/api";
-const TOKEN = "9e69a33f-4eb0-40cc-8875-8bf0a3af6cd8"; // Replace with a valid token
 
 export const apiRequest = async (
   endpoint: string,
@@ -10,7 +9,7 @@ export const apiRequest = async (
   try {
     const headers: HeadersInit = {
       Accept: "application/json",
-      Authorization: `Bearer ${TOKEN}`,
+      Authorization: `Bearer 9e6a01ad-5385-4122-baa3-de11f98974a2`,
     };
 
     if (!isMultipart) {
