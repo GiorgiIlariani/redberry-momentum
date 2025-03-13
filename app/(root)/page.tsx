@@ -1,9 +1,9 @@
 import { apiRequest } from "@/lib/actions";
+import TaskCard from "@/components/shared/TaskCard"; // Adjust the path if needed
+import { statuses } from "@/constants";
 
 const HomePage = async () => {
-  const employees = (await apiRequest("employees", "GET")) || [];
-
-  console.log({ employees });
+  const tasks = (await apiRequest("tasks", "GET")) || [];
 
   return (
     <main className="w-full mt-10">
@@ -11,20 +11,34 @@ const HomePage = async () => {
         დავალებების გვერდი
       </h1>
 
-      {/* Grid with 4 equally sized divs */}
       <div className="grid grid-cols-4 gap-4 mt-[52px]">
-        <div className="border py-[15px] text-center bg-[#F7BC30] text-white font-medium text-xl rounded-[10px]">
-          დასაწყები
-        </div>
-        <div className="border py-[15px] text-center bg-[#FB5607] text-white font-medium text-xl rounded-[10px]">
-          პროგრესში
-        </div>
-        <div className="border py-[15px] text-center bg-[#FF006E] text-white font-medium text-xl rounded-[10px]">
-          მზად ტესტირებისთვის
-        </div>
-        <div className="border py-[15px] text-center bg-[#3A86FF] text-white font-medium text-xl rounded-[10px]">
-          დასრულებული
-        </div>
+        {statuses.map((status) => {
+          const filteredTasks = tasks.filter(
+            (task: any) => task.status.name === status.name
+          );
+
+          return (
+            <div key={status.id}>
+              <div
+                className={`py-[15px] px-2 rounded-[10px] text-white font-medium text-xl text-center`}
+                style={{
+                  backgroundColor: status.color,
+                }}
+              >
+                {status.name}
+              </div>
+              <div className="p-2 space-y-[30px] mt-[30px]">
+                {filteredTasks.map((task: any) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    statusColor={status.color}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </main>
   );

@@ -9,7 +9,7 @@ export const apiRequest = async (
   try {
     const headers: HeadersInit = {
       Accept: "application/json",
-      Authorization: `Bearer 9e6b8beb-4066-4459-b9ef-79807a636a55`,
+      Authorization: `Bearer 9e6bdcac-2c6c-4259-bdec-73d9880db819`,
     };
 
     if (!isMultipart) {

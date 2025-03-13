@@ -5,38 +5,47 @@ declare type createNewEmployeeProps = {
   departmentId: string;
 };
 
-declare type departments = {
+declare type department = {
   id: number;
   name: string;
 };
 
-declare type employees = {
+declare type employee = {
   id: number;
   name: string;
   surname: string;
   avatar: string;
-  department: {
-    id: number;
-    name: string;
-  };
+  department: department;
 };
 
-declare type statuses = {
+declare type status = {
   id: number;
   name: string;
 };
 
-declare type priorities = {
+declare type priority = {
   id: number;
   name: string;
   icon: string;
 };
 
+declare interface Task {
+  id: number;
+  name: string;
+  description: string;
+  due_date: string; // e.g., "2025-04-01 00:00:00"
+  department: department;
+  employee: employee;
+  priority: priority;
+  status: status;
+  total_comments: number;
+}
+
 declare type CreateAssignmentFormProps = {
-  departments: departments[];
+  departments: department[];
   employees: employees[];
-  statuses: statuses[];
-  priorities: priorities[];
+  statuses: status[];
+  priorities: priority[];
 };
 
 interface Option {
@@ -70,3 +79,27 @@ declare interface FormFieldComponentProps {
   disabled?: boolean;
   customLabelClass?: string;
 }
+
+declare interface Task {
+  id: number;
+  name: string;
+  description: string;
+  due_date: string; // Original API field (e.g., "2025-12-31 00:00:00")
+  department: department;
+  employee: employee;
+  priority: priority;
+  status: status;
+  total_comments: number;
+}
+
+declare type PriorityName = "დაბალი" | "საშუალო" | "მაღალი";
+
+declare type comment = {
+  id: number;
+  text: string;
+  task_id: number;
+  parent_id: number | null;
+  author_avatar: string;
+  author_nickname: string;
+  sub_comments: Comment[]; // Recursive type for nested comments
+}[];

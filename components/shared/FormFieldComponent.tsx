@@ -39,7 +39,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
         <FormItem>
           <FormLabel
             className={`text-base font-medium ${
-              customLabelClass || "text-[#343A40]"
+              disabled ? customLabelClass : "text-[#343A40]"
             }`}
           >
             {label} {required && "*"}
