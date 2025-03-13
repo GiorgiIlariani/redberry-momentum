@@ -26,6 +26,8 @@ import {
 } from "../ui/select";
 import { apiRequest } from "@/lib/actions";
 import { DialogClose } from "../ui/dialog";
+import FormFieldComponent from "./FormFieldComponent";
+import ImageUpload from "./ImageUpload";
 
 const AddEmployeeForm = () => {
   const [image, setImage] = useState("");
@@ -104,227 +106,63 @@ const AddEmployeeForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="w-full flex items-center gap-[45px]">
-            {/* Name Field */}
             <div className="flex-1">
-              <FormField
-                control={form.control}
+              <FormFieldComponent
+                form={form}
                 name="name"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-[#343A40]">
-                        სახელი*
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-
-                      {/* Validation Messages */}
-                      <div className="text-sm mt-1 space-y-1">
-                        {/* Min Length Validation */}
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value,
-                            2,
-                            255
-                          )}`}
-                        >
-                          <Image
-                            src="/assets/check-icon.png"
-                            alt="Check Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span>მინიმუმ ორი სიმბოლო</span>
-                        </div>
-
-                        {/* Max Length Validation */}
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value,
-                            2,
-                            255
-                          )}`}
-                        >
-                          <Image
-                            src="/assets/check-icon.png"
-                            alt="Check Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span>მაქსიმუმ 255 სიმბოლო</span>
-                        </div>
-                      </div>
-                    </FormItem>
-                  );
+                label="სახელი"
+                type="input"
+                required
+                validation={{
+                  minLength: 2,
+                  maxLength: 255,
+                  messages: {
+                    minLength: "მინიმუმ ორი სიმბოლო",
+                    maxLength: "მაქსიმუმ 255 სიმბოლო",
+                  },
                 }}
               />
             </div>
 
-            {/* Username Field */}
             <div className="flex-1">
-              <FormField
-                control={form.control}
+              <FormFieldComponent
+                form={form}
                 name="username"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-[#343A40]">
-                        გვარი*
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-
-                      {/* Validation Messages */}
-                      <div className="text-sm mt-1 space-y-1">
-                        {/* Min Length Validation */}
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value,
-                            2,
-                            255
-                          )}`}
-                        >
-                          <Image
-                            src="/assets/check-icon.png"
-                            alt="Check Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span>მინიმუმ ორი სიმბოლო</span>
-                        </div>
-
-                        {/* Max Length Validation */}
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value,
-                            2,
-                            255
-                          )}`}
-                        >
-                          <Image
-                            src="/assets/check-icon.png"
-                            alt="Check Icon"
-                            width={16}
-                            height={16}
-                          />
-                          <span>მაქსიმუმ 255 სიმბოლო</span>
-                        </div>
-                      </div>
-                    </FormItem>
-                  );
+                label="გვარი"
+                type="input"
+                required
+                validation={{
+                  minLength: 2,
+                  maxLength: 255,
+                  messages: {
+                    minLength: "მინიმუმ ორი სიმბოლო",
+                    maxLength: "მაქსიმუმ 255 სიმბოლო",
+                  },
                 }}
               />
             </div>
           </div>
 
-          {/* image field */}
-          <div className="w-full flex flex-col gap-2 mt-[45px]">
-            <Label
-              htmlFor="image"
-              className="text-sm text-[#343A40] font-medium border-none"
-            >
-              ავატარი*
-            </Label>
-
-            <Label
-              className={`w-full flex justify-center items-center h-[120px] border border-dashed ${
-                form.formState.errors.avatar
-                  ? "border-red-500"
-                  : "border-[#CED4DA]"
-              }  rounded-lg cursor-pointer`}
-            >
-              {image ? (
-                <div className="relative w-max">
-                  <Image
-                    src={image}
-                    alt="avatar logo"
-                    width={88}
-                    height={88}
-                    className="rounded-full object-cover w-[88px] h-[88px]"
-                  />
-                  <button
-                    type="button"
-                    onClick={onDelete}
-                    className="absolute right-0 bottom-0 rounded-full p-[5px] bg-white border border-[#6C757D] text-sm text-[#6C757D] cursor-pointer"
-                  >
-                    <Image
-                      src="/assets/delete-icon.png"
-                      alt="delete"
-                      width={14}
-                      height={14}
-                      className="w-[14px] h-[14px] object-contain"
-                    />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-[7px] items-center">
-                  <Image
-                    src="/assets/upload.png"
-                    alt="upload"
-                    width={24}
-                    height={24}
-                  />
-                  <p className="text-[#343A40] text-sm">ატვირთეთ ფოტო</p>
-                </div>
-              )}
-
-              <input
-                type="file"
-                accept="image/*"
-                id="image"
-                className="border hidden"
-                {...form.register("avatar")}
-                onChange={(e) => onChange("image", e)}
-              />
-            </Label>
-          </div>
+          <ImageUpload
+            form={form}
+            image={image}
+            onChange={onChange}
+            onDelete={onDelete}
+          />
 
           <div className="w-full flex items-center gap-[45px] mt-[45px]">
             <div className="flex-1">
-              <FormField
-                control={form.control}
+              <FormFieldComponent
+                form={form}
                 name="department_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className={`text-sm font-medium ${
-                        form.formState.errors.department_id
-                          ? "text-red-500"
-                          : "text-[#343A40]"
-                      }`}
-                    >
-                      დეპარტამენტი*
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={(value) => field.onChange(value)} // Store ID in form state
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger
-                          className={`w-full ${
-                            form.formState.errors.department_id
-                              ? "border-red-500 focus:ring-red-500"
-                              : "border-[#CED4DA] focus:ring-[#CED4DA]"
-                          }`}
-                        >
-                          <SelectValue placeholder="აირჩიეთ დეპარტამენტი">
-                            {departments.find((dept) => dept.id === field.value)
-                              ?.name || "აირჩიეთ დეპარტამენტი"}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {departments.map((option) => (
-                            <SelectItem key={option.id} value={option.id}>
-                              {option.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="დეპარტამენტი"
+                type="select"
+                required
+                options={departments.map((dept) => ({
+                  id: dept.id, // Matches Option interface
+                  name: dept.name,
+                }))}
+                placeholder="აირჩიეთ დეპარტამენტი"
               />
             </div>
             <div className="flex-1" />

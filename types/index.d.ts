@@ -15,7 +15,10 @@ declare type employees = {
   name: string;
   surname: string;
   avatar: string;
-  department_id: number;
+  department: {
+    id: number;
+    name: string;
+  };
 };
 
 declare type statuses = {
@@ -35,3 +38,35 @@ declare type CreateAssignmentFormProps = {
   statuses: statuses[];
   priorities: priorities[];
 };
+
+interface Option {
+  id: string | number;
+  name: string;
+  icon?: string; // For priorities
+  avatar?: string; // For employees
+}
+
+interface ValidationRules {
+  minLength: number; // Ensure it's always required
+  maxLength: number;
+  messages?: {
+    minLength?: string;
+    maxLength?: string;
+  };
+}
+
+declare interface FormFieldComponentProps {
+  form: any;
+  name: string;
+  label: string;
+  type: "input" | "textarea" | "select";
+  options?: Option[];
+  placeholder?: string;
+  required?: boolean;
+  withAvatar?: boolean;
+  withIcon?: boolean;
+  onValueChange?: (value: string) => void; // 🔥 Allow handling value change
+  validation?: ValidationRules;
+  disabled?: boolean;
+  customLabelClass?: string;
+}

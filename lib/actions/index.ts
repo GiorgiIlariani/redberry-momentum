@@ -9,7 +9,7 @@ export const apiRequest = async (
   try {
     const headers: HeadersInit = {
       Accept: "application/json",
-      Authorization: `Bearer 9e6a01ad-5385-4122-baa3-de11f98974a2`,
+      Authorization: `Bearer 9e6b8beb-4066-4459-b9ef-79807a636a55`,
     };
 
     if (!isMultipart) {
@@ -25,8 +25,12 @@ export const apiRequest = async (
     if (method === "GET") delete options.body; // Remove body for GET requests
 
     const response = await fetch(`${API_URL}/${endpoint}`, options);
+
     if (!response.ok) {
-      throw new Error(`Request failed: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.message || `Request failed: ${response.status}`
+      );
     }
 
     return await response.json();

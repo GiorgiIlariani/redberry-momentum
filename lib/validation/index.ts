@@ -16,3 +16,25 @@ export const CreateAssignmentFormSchema = z.object({
   priority_id: z.string().nonempty("პრიორიტეტი აუცილებელია"),
   department_id: z.string().nonempty(),
 });
+
+// department_id
+// :
+// "7"
+// description
+// :
+// " Add \"momentum.redberryinternship.ge\" to next.config.js under images.domains or remotePatterns to allow Next.js to load images from that host. Restart the dev server after changes. "
+// due_date
+// :
+// "2025-03-20T20:00:00.000Z"
+// employee_id
+// :
+// "132"
+// priority_id
+// :
+// "1"
+// status_id
+// :
+// "1"
+// title
+// :
+// "Fix Next.js Invalid src Prop for External Images"

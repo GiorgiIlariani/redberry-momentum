@@ -24,6 +24,11 @@ import { getValidationClass } from "@/utils";
 import { Textarea } from "../ui/textarea";
 import DropdownMenuComponent from "../shared/DropdownMenuComponent";
 import { DatePicker } from "../shared/DatePicker";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { apiRequest } from "@/lib/actions";
+import { useRouter } from "next/navigation";
+import FormFieldComponent from "../shared/FormFieldComponent";
 
 const CreateAssignmentForm = ({
   departments,
@@ -31,6 +36,9 @@ const CreateAssignmentForm = ({
   statuses,
   priorities,
 }: CreateAssignmentFormProps) => {
+  const router = useRouter();
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
   const form = useForm<z.infer<typeof CreateAssignmentFormSchema>>({
     resolver: zodResolver(CreateAssignmentFormSchema),
     defaultValues: {
@@ -47,8 +55,40 @@ const CreateAssignmentForm = ({
   const onSubmit = async (
     values: z.infer<typeof CreateAssignmentFormSchema>
   ) => {
-    console.log({ values });
+    try {
+      const payload = {
+        name: values.title,
+        description: values.description,
+        due_date: new Date(values.due_date).toISOString().split("T")[0],
+        status_id: Number(values.status_id), // Ensure these are numbers
+        employee_id: Number(values.employee_id),
+        priority_id: Number(values.priority_id),
+      };
+
+      const result = await apiRequest("tasks", "POST", payload, false);
+
+      if (result) {
+        console.log("Assignment created successfully:", result);
+        form.reset();
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Failed to create assignment:", error);
+    }
   };
+
+  const [filteredEmployees, setFilteredEmployees] = useState(employees);
+
+  useEffect(() => {
+    if (selectedDepartment) {
+      const filtered = employees.filter(
+        (emp) => emp.department.id === Number(selectedDepartment)
+      );
+      setFilteredEmployees(filtered);
+    } else {
+      setFilteredEmployees([]);
+    }
+  }, [selectedDepartment, employees]);
 
   return (
     <div className="w-full flex flex-col">
@@ -57,127 +97,48 @@ const CreateAssignmentForm = ({
           <div className="w-full pl-[55px] pt-[65px] pr-[368px] border border-[#DDD2FF] h-[958px] mt-5">
             <div className="w-full flex items-start gap-[161px]">
               <div className="w-full flex-1">
-                <FormField
-                  control={form.control}
+                <FormFieldComponent
+                  type="input"
+                  form={form}
                   name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium text-[#343A40]">
-                        სათაური*
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <div className="text-sm mt-1 space-y-1">
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value,
-                            2,
-                            255
-                          )}`}
-                        >
-                          <span>მინიმუმ ორი სიმბოლო</span>
-                        </div>
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value,
-                            2,
-                            255
-                          )}`}
-                        >
-                          <span>მაქსიმუმ 255 სიმბოლო</span>
-                        </div>
-                      </div>
-                    </FormItem>
-                  )}
+                  label="სათაური"
+                  required
                 />
               </div>
               <div className="w-full flex-1">
-                <FormField
-                  control={form.control}
+                <FormFieldComponent
+                  form={form}
                   name="department_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium text-[#343A40]">
-                        დეპარტამენტი*
-                      </FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value?.toString()}
-                        >
-                          <SelectTrigger
-                            className={`w-full ${
-                              form.formState.errors.department_id
-                                ? "border-red-500 focus:ring-red-500"
-                                : "border-[#CED4DA] focus:ring-[#CED4DA]"
-                            }`}
-                          >
-                            <SelectValue placeholder="დიზაინის დეპარტამენტი" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {departments.map((option) => (
-                              <SelectItem key={option.id} value={option.name}>
-                                {option.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                  )}
+                  label="დეპარტამენტი"
+                  type="select"
+                  options={departments}
+                  placeholder="დიზაინის დეპარტამენტი"
+                  required
+                  onValueChange={(value) => setSelectedDepartment(value)} // 🔥 Update the selected department
                 />
               </div>
             </div>
             <div className="w-full flex items-start gap-[161px] mt-[55px]">
               <div className="w-full flex-1">
-                <FormField
-                  control={form.control}
+                <FormFieldComponent
+                  form={form}
                   name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium text-[#343A40]">
-                        აღწერა
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea className="h-[133px]" {...field} />
-                      </FormControl>
-                      <div className="text-sm mt-1 space-y-1">
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value || "",
-                            2,
-                            255
-                          )}`}
-                        >
-                          <span>მინიმუმ ორი სიმბოლო</span>
-                        </div>
-                        <div
-                          className={`flex items-center gap-2 ${getValidationClass(
-                            field.value || "",
-                            2,
-                            255
-                          )}`}
-                        >
-                          <span>მაქსიმუმ 255 სიმბოლო</span>
-                        </div>
-                      </div>
-                    </FormItem>
-                  )}
+                  label="აღწერა"
+                  type="textarea"
                 />
               </div>
               <div className="w-full flex-1">
-                <FormField
-                  control={form.control}
+                <FormFieldComponent
+                  form={form}
                   name="employee_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base font-medium text-[#343A40]">
-                        პასუხისხმეგებლი თანამშრომელი*
-                      </FormLabel>
-                      <DropdownMenuComponent employees={employees} />
-                    </FormItem>
-                  )}
+                  label="პასუხისხმეგებლი თანამშრომელი"
+                  type="select"
+                  options={filteredEmployees}
+                  placeholder="თანამშრომლის არჩევა"
+                  required
+                  withAvatar
+                  disabled={!form.watch("department_id")} // Disable if department is not selected
+                  customLabelClass="text-[#ADB5BD]" // Pass custom class for label styling
                 />
               </div>
             </div>
@@ -185,88 +146,26 @@ const CreateAssignmentForm = ({
             <div className="w-full flex items-start gap-[161px] mt-[55px]">
               <div className="flex-1 flex items-center gap-8">
                 <div className="w-full">
-                  <FormField
-                    control={form.control}
+                  <FormFieldComponent
+                    form={form}
                     name="priority_id"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base font-medium text-[#343A40]">
-                          პრიორიტეტი*
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value?.toString()}
-                          >
-                            <SelectTrigger
-                              className={`w-full ${
-                                form.formState.errors.priority_id
-                                  ? "border-red-500"
-                                  : ""
-                              }`}
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {priorities.map((priority) => (
-                                <SelectItem
-                                  key={priority.id}
-                                  value={priority.id.toString()}
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img
-                                      src={priority.icon}
-                                      alt={priority.name}
-                                      className="w-5 h-5"
-                                    />
-                                    <span>{priority.name}</span>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
+                    label="პრიორიტეტი"
+                    type="select"
+                    options={priorities}
+                    placeholder="აირჩიეთ პრიორიტეტი"
+                    required
+                    withIcon
                   />
                 </div>
                 <div className="w-full">
-                  <FormField
-                    control={form.control}
+                  <FormFieldComponent
+                    form={form}
                     name="status_id"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base font-medium text-[#343A40]">
-                          სტატუსი*
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value?.toString()}
-                          >
-                            <SelectTrigger
-                              className={`w-full ${
-                                form.formState.errors.status_id
-                                  ? "border-red-500"
-                                  : ""
-                              }`}
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {statuses.map((status) => (
-                                <SelectItem
-                                  key={status.id}
-                                  value={status.id.toString()}
-                                >
-                                  {status.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
+                    label="სტატუსი"
+                    type="select"
+                    options={statuses}
+                    placeholder="აირჩიეთ სტატუსი"
+                    required
                   />
                 </div>
               </div>
@@ -297,7 +196,10 @@ const CreateAssignmentForm = ({
             </div>
 
             <div className="w-full flex justify-end">
-              <Button className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center rounded-md mt-[145px]">
+              <Button
+                type="submit"
+                className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center rounded-md mt-[145px]"
+              >
                 დავალების შექმნა
               </Button>
             </div>

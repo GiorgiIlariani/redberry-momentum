@@ -10,7 +10,7 @@ const CreateAssignment = async () => {
   const priorities = (await apiRequest("priorities", "GET")) || [];
 
   return (
-    <main className="w-full mt-10">
+    <main className="w-full mt-10 max-h-[958px] mb-[386px]">
       <h1 className="text-[#212529] font-semibold text-[34px]">
         შექმენი ახალი დავალება
       </h1>
