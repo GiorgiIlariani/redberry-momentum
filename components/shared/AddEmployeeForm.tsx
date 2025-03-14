@@ -5,31 +5,17 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "../ui/input";
-import Image from "next/image";
-import { getValidationClass, handleFileChange } from "@/utils";
+import { Form } from "@/components/ui/form";
+
+import { handleFileChange } from "@/utils";
 import { useEffect, useState } from "react";
-import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+
 import { apiRequest } from "@/lib/actions";
 import { DialogClose } from "../ui/dialog";
 import FormFieldComponent from "./FormFieldComponent";
 import ImageUpload from "./ImageUpload";
 
-const AddEmployeeForm = () => {
+const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
   const [image, setImage] = useState("");
   const [departments, setDepartments] = useState<
     { id: string; name: string }[]
@@ -40,21 +26,21 @@ const AddEmployeeForm = () => {
     defaultValues: {
       name: "",
       username: "",
-      avatar: "",
+      avatar: undefined,
       department_id: "",
     },
   });
 
-  const onChange = async (
-    name: string,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onChange = (name: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const image = await handleFileChange(file);
 
-    if (image) {
-      form.setValue("avatar", image as string, { shouldValidate: true }); // ✅ Forces validation update
-      setImage(image as string);
+    if (file) {
+      form.setValue("avatar", file, { shouldValidate: true }); // ✅ Pass actual file
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string); // Only for preview
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -84,9 +70,7 @@ const AddEmployeeForm = () => {
       formData.append("department_id", values.department_id);
 
       if (values.avatar) {
-        const response = await fetch(values.avatar);
-        const blob = await response.blob();
-        formData.append("avatar", blob, "avatar.jpg");
+        formData.append("avatar", values.avatar);
       }
 
       const result = await apiRequest("employees", "POST", formData, true);
@@ -95,11 +79,14 @@ const AddEmployeeForm = () => {
         console.log("Employee added successfully:", result);
         form.reset();
         setImage("");
+        onClose();
       }
     } catch (error) {
       console.error("Failed to add employee:", error);
     }
   };
+
+  console.log(form.getValues());
 
   return (
     <div className="w-full flex flex-col">

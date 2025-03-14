@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { ChangeEvent } from "react";
 import { Label } from "../ui/label";
 import { UseFormReturn } from "react-hook-form";
+import { Input } from "../ui/input";
 
 interface ImageUploadProps {
   form: UseFormReturn<any>; // Replace 'any' with a specific form schema if available
@@ -16,6 +17,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onChange,
   onDelete,
 }) => {
+  // console.log(form.getValues());
+
   return (
     <div className="w-full flex flex-col gap-2 mt-[45px]">
       <Label
@@ -65,7 +68,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         )}
 
-        <input
+        <Input
           type="file"
           accept="image/*"
           id="image"

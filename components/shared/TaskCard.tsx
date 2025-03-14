@@ -25,7 +25,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, statusColor }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[10px]">
           <div
-            className="w-[86px] p-1 border  flex items-center gap-1 rounded-[4px]"
+            className="p-1 border  flex items-center gap-1 rounded-[4px]"
             style={{
               borderColor:
                 priority === "საშუალო"

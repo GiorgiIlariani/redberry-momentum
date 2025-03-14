@@ -7,11 +7,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import AddEmployeeForm from "./AddEmployeeForm";
+import { useState } from "react";
 
 export function AddEmployeeModal() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
-      <DialogTrigger className="text-[#212529] px-5 bg-transparent hover:bg-transparent cursor-pointer border border-[#8338EC] h-[39px] rounded-[5px]">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        className="text-[#212529] px-5 bg-transparent hover:bg-transparent cursor-pointer border border-[#8338EC] h-[39px] rounded-[5px]"
+        onClick={() => setOpen(true)}
+      >
         თანამშრომლის შექმნა
       </DialogTrigger>
       <DialogContent className="bg-white min-w-[913px] h-[766px] rounded-[10px]">
@@ -21,7 +27,7 @@ export function AddEmployeeModal() {
           </DialogTitle>
         </div>
         {/* add employee modal form */}
-        <AddEmployeeForm />
+        <AddEmployeeForm onClose={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

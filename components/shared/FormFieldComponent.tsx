@@ -38,17 +38,21 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
       render={({ field }) => (
         <FormItem>
           <FormLabel
-            className={`text-base font-medium ${
-              disabled ? customLabelClass : "text-[#343A40]"
-            }`}
+            className="text-base font-medium"
+            style={{
+              color: disabled ? customLabelClass : "#343A40",
+            }}
           >
             {label} {required && "*"}
           </FormLabel>
           <FormControl>
             {type === "input" ? (
-              <Input {...field} />
+              <Input
+                {...field}
+                className="h-[45px] border border-[#DEE2E6] rounded-[5px] p-[14px] !ring-0"
+              />
             ) : type === "textarea" ? (
-              <Textarea {...field} className="h-[133px]" />
+              <Textarea {...field} className="h-[133px] !ring-0 p-[14px]" />
             ) : (
               <Select
                 onValueChange={(value) => {
@@ -70,7 +74,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                     <SelectItem
                       key={option.id}
                       value={option.id.toString()}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 p-[14px]"
                     >
                       {withAvatar && option.avatar && (
                         <Image

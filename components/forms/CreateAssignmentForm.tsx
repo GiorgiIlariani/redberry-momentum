@@ -137,8 +137,8 @@ const CreateAssignmentForm = ({
                   placeholder="თანამშრომლის არჩევა"
                   required
                   withAvatar
-                  disabled={!form.watch("department_id")} // Disable if department is not selected
-                  customLabelClass="text-[#ADB5BD]" // Pass custom class for label styling
+                  disabled={!form.watch("department_id")}
+                  customLabelClass="text-[#ADB5BD]"
                 />
               </div>
             </div>

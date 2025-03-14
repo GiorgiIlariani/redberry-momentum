@@ -102,4 +102,4 @@ declare type comment = {
   author_avatar: string;
   author_nickname: string;
   sub_comments: Comment[]; // Recursive type for nested comments
-}[];
+};

@@ -1,6 +1,7 @@
 import { apiRequest } from "@/lib/actions";
 import TaskCard from "@/components/shared/TaskCard"; // Adjust the path if needed
 import { statuses } from "@/constants";
+import { FilterMenubar } from "@/components/shared/FilterMenubar";
 
 const HomePage = async () => {
   const tasks = (await apiRequest("tasks", "GET")) || [];
@@ -11,7 +12,11 @@ const HomePage = async () => {
         დავალებების გვერდი
       </h1>
 
-      <div className="grid grid-cols-4 gap-4 mt-[52px]">
+      <div className="mt-[52px]">
+        <FilterMenubar />
+      </div>
+
+      <div className="grid grid-cols-4 gap-4 mt-[79px]">
         {statuses.map((status) => {
           const filteredTasks = tasks.filter(
             (task: any) => task.status.name === status.name

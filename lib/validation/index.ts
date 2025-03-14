@@ -1,10 +1,25 @@
 import { z } from "zod";
 
 export const AddEmployeeFormSchema = z.object({
-  name: z.string().min(2, "მინიმუმ ორი სიმბოლო"),
-  username: z.string().min(2, "მინიმუმ ორი სიმბოლო"),
-  avatar: z.string().nonempty("სურათი აუცილებელია"), // Ensure it's not empty
-  department_id: z.string().nonempty(),
+  name: z
+    .string()
+    .min(2, "მინიმუმ ორი სიმბოლო")
+    .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ლათინური და ქართული ასოებია დაშვებული"),
+  username: z
+    .string()
+    .min(2, "მინიმუმ ორი სიმბოლო")
+    .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ლათინური და ქართული ასოებია დაშვებული"),
+  avatar: z
+    .instanceof(File, { message: "სურათი აუცილებელია" })
+    .refine((file) => file.size <= 600 * 1024, {
+      message: "ფაილის ზომა არ უნდა აღემატებოდეს 600KB-ს",
+    })
+    .refine(
+      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+      { message: "მხოლოდ სურათის ტიპები დაშვებულია (JPEG, PNG, WEBP)" }
+    )
+    .optional(), // ✅ Allow undefined initially
+  department_id: z.string().nonempty("დეპარტამენტის არჩევა აუცილებელია"),
 });
 
 export const CreateAssignmentFormSchema = z.object({
@@ -16,25 +31,3 @@ export const CreateAssignmentFormSchema = z.object({
   priority_id: z.string().nonempty("პრიორიტეტი აუცილებელია"),
   department_id: z.string().nonempty(),
 });
-
-// department_id
-// :
-// "7"
-// description
-// :
-// " Add \"momentum.redberryinternship.ge\" to next.config.js under images.domains or remotePatterns to allow Next.js to load images from that host. Restart the dev server after changes. "
-// due_date
-// :
-// "2025-03-20T20:00:00.000Z"
-// employee_id
-// :
-// "132"
-// priority_id
-// :
-// "1"
-// status_id
-// :
-// "1"
-// title
-// :
-// "Fix Next.js Invalid src Prop for External Images"

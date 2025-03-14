@@ -4,40 +4,48 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/actions";
+import { addComment, addSubComment } from "@/lib/actions/addComment";
 
-export default function AddComment({ taskId }: { taskId: string }) {
-  const [value, setValue] = useState("");
+export default function AddComment({
+  taskId,
+  parentId,
+}: {
+  taskId: string;
+  parentId?: number;
+}) {
+  const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (value.length < 2) return alert("Comment must be at least 2 characters");
+  const handleAddComment = async () => {
+    if (!comment.trim()) return;
 
     setLoading(true);
-    const response = await apiRequest(`tasks/${taskId}/comments`, "POST", {
-      text: value,
-      //   parent_id: 1,
-    });
+    try {
+      if (!parentId) await addComment(taskId, comment);
 
-    if (response) {
-      setValue(""); // Clear the textarea on success
-    } else {
-      console.log("Failed to submit comment. Please try again.");
+      // console.log({ comment, taskId, parentId });
+
+      if (parentId) await addSubComment(taskId, comment, parentId);
+      setComment(""); // Clear input after adding comment
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div className="flex flex-col gap-3 w-full bg-white p-4 rounded-xl">
+    <div className="min-h-[135px] flex flex-col gap-3 w-full bg-white p-4 rounded-xl">
       <Textarea
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
         placeholder="დაწერე კომენტარი"
-        className="min-h-[135px] pl-5 pt-[18px] border-none rounded-lg 
+        className="pl-5 pt-[18px] border-none rounded-lg 
                    focus:outline-none focus:ring-0 focus:border-none 
                    focus-visible:ring-0 focus-visible:border-transparent focus-visible:outline-none shadow-none"
       />
       <Button
-        onClick={handleSubmit}
+        onClick={handleAddComment}
         disabled={loading}
         className="self-end px-4 py-2 text-white bg-[#8338EC] hover:bg-[#8338EC] rounded-[20px] cursor-pointer"
       >

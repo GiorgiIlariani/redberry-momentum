@@ -1,20 +1,11 @@
-import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { FiChevronDown } from "react-icons/fi";
-// import { AddAgentModal } from "./AddAgentModal";
 
-const DropdownMenuComponent = ({
-  employees,
-}: //   onSelectAgent,
-//   error,
-{
-  employees: employees[];
-}) => {
+const DropdownMenuComponent = ({ employees }: { employees: employee[] }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
