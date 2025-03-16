@@ -30,6 +30,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
   validation,
   disabled,
   customLabelClass,
+  addEmployee,
 }) => {
   return (
     <FormField
@@ -49,7 +50,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
             {type === "input" ? (
               <Input
                 {...field}
-                className="h-[45px] border border-[#DEE2E6] rounded-[5px] p-[14px] !ring-0"
+                className={`h-[45px] border border-[#DEE2E6] rounded-[5px] p-[14px] !ring-0`}
               />
             ) : type === "textarea" ? (
               <Textarea {...field} className="h-[133px] !ring-0 p-[14px]" />
@@ -70,6 +71,22 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                   <SelectValue placeholder={placeholder || "აირჩიეთ"} />
                 </SelectTrigger>
                 <SelectContent>
+                  {/* here i want something and inside text დაამატე თანამშრომელი with plus icon /assets/plus-icon.png and it should can open <AddEmployeeModal /> */}
+                  {addEmployee && (
+                    <div
+                      // onClick={() => setIsModalOpen(true)}
+                      className="flex items-center gap-2 p-[14px] cursor-pointer hover:bg-gray-100 px-3 py-2"
+                      //  "focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+                    >
+                      <Image
+                        src="/assets/plus-icon.png"
+                        alt="Add Employee"
+                        width={20}
+                        height={20}
+                      />
+                      <span>დაამატე თანამშრომელი</span>
+                    </div>
+                  )}
                   {options.map((option) => (
                     <SelectItem
                       key={option.id}

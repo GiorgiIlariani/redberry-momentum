@@ -3,8 +3,30 @@ import TaskCard from "@/components/shared/TaskCard"; // Adjust the path if neede
 import { statuses } from "@/constants";
 import { FilterMenubar } from "@/components/shared/FilterMenubar";
 
-const HomePage = async () => {
+const HomePage = async ({
+  searchParams,
+}: {
+  searchParams: {
+    departments?: string;
+    priorities?: string;
+    employees?: string;
+  };
+}) => {
   const tasks = (await apiRequest("tasks", "GET")) || [];
+  const departments = (await apiRequest("departments", "GET")) || [];
+  const priority = (await apiRequest("priorities", "GET")) || [];
+  const employees = (await apiRequest("employees", "GET")) || [];
+
+  // Convert query parameters into arrays for filtering
+  const selectedDepartments = searchParams.departments
+    ? searchParams.departments.split(",").map(Number)
+    : [];
+  const selectedPriorities = searchParams.priorities
+    ? searchParams.priorities.split(",").map(Number)
+    : [];
+  const selectedEmployees = searchParams.employees
+    ? searchParams.employees.split(",").map(Number)
+    : [];
 
   return (
     <main className="w-full mt-10">
@@ -13,14 +35,30 @@ const HomePage = async () => {
       </h1>
 
       <div className="mt-[52px]">
-        <FilterMenubar />
+        <FilterMenubar
+          departments={departments}
+          priorities={priority}
+          employees={employees}
+        />
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-[79px]">
         {statuses.map((status) => {
-          const filteredTasks = tasks.filter(
-            (task: any) => task.status.name === status.name
-          );
+          const filteredTasks = tasks.filter((task: any) => {
+            const taskDepartment = task.department?.id;
+            const taskPriority = task.priority?.id;
+            const taskEmployee = task.employee?.id;
+
+            return (
+              (selectedDepartments.length === 0 ||
+                selectedDepartments.includes(taskDepartment)) &&
+              (selectedPriorities.length === 0 ||
+                selectedPriorities.includes(taskPriority)) &&
+              (selectedEmployees.length === 0 ||
+                selectedEmployees.includes(taskEmployee)) &&
+              task.status.name === status.name
+            );
+          });
 
           return (
             <div key={status.id}>

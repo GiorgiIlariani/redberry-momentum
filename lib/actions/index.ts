@@ -1,3 +1,7 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
 const API_URL = "https://momentum.redberryinternship.ge/api";
 
 export const apiRequest = async (
@@ -40,4 +44,31 @@ export const apiRequest = async (
     console.error(`Error with ${method} ${endpoint}:`, error);
     return null;
   }
+};
+
+export const addComment = async (taskId: string, text: string) => {
+  const response = await apiRequest(`tasks/${taskId}/comments`, "POST", {
+    text,
+  });
+  revalidatePath(`/tasks/${taskId}`);
+  return response;
+};
+
+export const addSubComment = async (
+  taskId: string,
+  text: string,
+  parent_id: number
+) => {
+  const response = await apiRequest(`tasks/${taskId}/comments`, "POST", {
+    text,
+    parent_id,
+  });
+  revalidatePath(`/tasks/${taskId}`);
+  return response;
+};
+
+export const addEmployee = async (formData: any) => {
+  const response = await apiRequest("employees", "POST", formData, true);
+  revalidatePath(`/create-assignment`);
+  return response;
 };

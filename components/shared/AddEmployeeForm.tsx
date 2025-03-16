@@ -7,10 +7,9 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
-import { handleFileChange } from "@/utils";
 import { useEffect, useState } from "react";
 
-import { apiRequest } from "@/lib/actions";
+import { addEmployee, apiRequest } from "@/lib/actions";
 import { DialogClose } from "../ui/dialog";
 import FormFieldComponent from "./FormFieldComponent";
 import ImageUpload from "./ImageUpload";
@@ -73,7 +72,9 @@ const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
         formData.append("avatar", values.avatar);
       }
 
-      const result = await apiRequest("employees", "POST", formData, true);
+      const result = await addEmployee(formData);
+
+      console.log({ result });
 
       if (result) {
         console.log("Employee added successfully:", result);
@@ -85,8 +86,6 @@ const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
       console.error("Failed to add employee:", error);
     }
   };
-
-  console.log(form.getValues());
 
   return (
     <div className="w-full flex flex-col">

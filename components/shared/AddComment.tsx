@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { apiRequest } from "@/lib/actions";
-import { addComment, addSubComment } from "@/lib/actions/addComment";
+import { apiRequest, addComment, addSubComment } from "@/lib/actions";
 
 export default function AddComment({
   taskId,
@@ -21,10 +20,9 @@ export default function AddComment({
 
     setLoading(true);
     try {
-      if (!parentId) await addComment(taskId, comment);
-
-      // console.log({ comment, taskId, parentId });
-
+      if (!parentId) {
+        const response = await addComment(taskId, comment);
+      }
       if (parentId) await addSubComment(taskId, comment, parentId);
       setComment(""); // Clear input after adding comment
     } catch (error) {

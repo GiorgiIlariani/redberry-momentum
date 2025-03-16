@@ -78,6 +78,8 @@ declare interface FormFieldComponentProps {
   validation?: ValidationRules;
   disabled?: boolean;
   customLabelClass?: string;
+  error?: any;
+  addEmployee?: boolean;
 }
 
 declare interface Task {

@@ -39,16 +39,20 @@ const CreateAssignmentForm = ({
   const router = useRouter();
   const [selectedDepartment, setSelectedDepartment] = useState("");
 
+  const storedFormData = JSON.parse(
+    (typeof window !== "undefined" && localStorage.getItem("formData")) || "{}"
+  );
+
   const form = useForm<z.infer<typeof CreateAssignmentFormSchema>>({
     resolver: zodResolver(CreateAssignmentFormSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      due_date: new Date().toISOString(),
-      status_id: "",
-      employee_id: "",
-      priority_id: "",
-      department_id: "",
+      title: storedFormData.title || "",
+      description: storedFormData.description || "",
+      due_date: storedFormData.due_date || new Date().toISOString(),
+      status_id: storedFormData.status_id || "1",
+      employee_id: storedFormData.employee_id || "",
+      priority_id: storedFormData.priority_id || "2",
+      department_id: storedFormData.department_id || "",
     },
   });
 
@@ -69,8 +73,8 @@ const CreateAssignmentForm = ({
 
       if (result) {
         console.log("Assignment created successfully:", result);
-        form.reset();
-        router.push("/");
+        // form.reset();
+        // router.push("/");
       }
     } catch (error) {
       console.error("Failed to create assignment:", error);
@@ -90,6 +94,19 @@ const CreateAssignmentForm = ({
     }
   }, [selectedDepartment, employees]);
 
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      typeof window !== "undefined" &&
+        localStorage.setItem("formData", JSON.stringify(value));
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  const error = form.formState.errors;
+
+  console.log({ error });
+
   return (
     <div className="w-full flex flex-col">
       <Form {...form}>
@@ -103,6 +120,14 @@ const CreateAssignmentForm = ({
                   name="title"
                   label="სათაური"
                   required
+                  validation={{
+                    minLength: 2,
+                    maxLength: 255,
+                    messages: {
+                      minLength: "მინიმუმ ორი სიმბოლო",
+                      maxLength: "მაქსიმუმ 255 სიმბოლო",
+                    },
+                  }}
                 />
               </div>
               <div className="w-full flex-1">
@@ -125,6 +150,14 @@ const CreateAssignmentForm = ({
                   name="description"
                   label="აღწერა"
                   type="textarea"
+                  validation={{
+                    minLength: 2,
+                    maxLength: 255,
+                    messages: {
+                      minLength: "მინიმუმ ორი სიმბოლო",
+                      maxLength: "მაქსიმუმ 255 სიმბოლო",
+                    },
+                  }}
                 />
               </div>
               <div className="w-full flex-1">
@@ -139,6 +172,7 @@ const CreateAssignmentForm = ({
                   withAvatar
                   disabled={!form.watch("department_id")}
                   customLabelClass="text-[#ADB5BD]"
+                  // addEmploye={}
                 />
               </div>
             </div>

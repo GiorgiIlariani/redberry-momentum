@@ -1,5 +1,6 @@
 import AddComment from "@/components/shared/AddComment";
 import CommentCard from "@/components/shared/CommentCard";
+import { DepartmentBadge, PriorityBadge } from "@/components/shared/TaskCard";
 import StatusUpdater from "@/components/shared/TaskStatusUpdater";
 import { georgianWeekdays } from "@/constants";
 import { apiRequest } from "@/lib/actions";
@@ -15,6 +16,12 @@ const Task = async ({ params }: { params: { id: string } }) => {
     `tasks/${params.id}/comments`,
     "GET"
   );
+  const reversedComments = [...comments].reverse();
+
+  // const sortedComments = comments.sort(
+  //   (a, b) =>
+  //     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  // );
 
   const priority = details.priority.name;
 
@@ -31,41 +38,8 @@ const Task = async ({ params }: { params: { id: string } }) => {
     <main className="w-full mt-10 flex gap-[223px] pb-[376px]">
       <div className="max-w-[715px]">
         <div className="flex items-center gap-[10px]">
-          <div
-            className="p-1 border  flex items-center gap-1 rounded-[4px]"
-            style={{
-              borderColor:
-                priority === "საშუალო"
-                  ? "#FFBE0B"
-                  : priority === "დაბალი"
-                  ? "#FA4D4D"
-                  : "#08A508",
-            }}
-          >
-            <Image
-              src="/assets/Medium.png"
-              alt="medium"
-              width={16}
-              height={16}
-              className="w-[16px] h-[16px] object-contain"
-            />
-            <p
-              className="text-xs  font-medium"
-              style={{
-                color:
-                  priority === "საშუალო"
-                    ? "#FFBE0B"
-                    : priority === "დაბალი"
-                    ? "#FA4D4D"
-                    : "#08A508",
-              }}
-            >
-              {priority}
-            </p>
-          </div>
-          <div className="w-[88px] text-center py-[5px] px-[9px] rounded-[15px] bg-[#FF66A8] text-white text-xs">
-            დიზაინი
-          </div>
+          <PriorityBadge priority={details.priority.name} />
+          <DepartmentBadge departmentName={details.department.name} />
         </div>
         <h1 className="text-[#212529] font-semibold text-[34px]">
           Redberry-ს საიტის ლენდინგის დიზაინი
@@ -156,17 +130,13 @@ const Task = async ({ params }: { params: { id: string } }) => {
           </div>
 
           <div className="flex flex-col gap-[38px] max-h-[618px] overflow-y-auto scrollbar-hide">
-            {comments.map((comment) => {
-              console.log(comment.sub_comments);
-
-              return (
-                <CommentCard
-                  key={comment.id}
-                  comment={comment}
-                  taskId={params.id}
-                />
-              );
-            })}
+            {reversedComments.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                taskId={params.id}
+              />
+            ))}
           </div>
         </div>
       </div>

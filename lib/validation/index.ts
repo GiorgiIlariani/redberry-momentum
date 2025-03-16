@@ -23,11 +23,34 @@ export const AddEmployeeFormSchema = z.object({
 });
 
 export const CreateAssignmentFormSchema = z.object({
-  title: z.string().min(2, "მინიმუმ ორი სიმბოლო").max(255),
-  description: z.string().optional(),
-  due_date: z.string().nonempty("დედლაინი აუცილებელია"),
-  status_id: z.string().nonempty("სტატუსი აუცილებელია"),
-  employee_id: z.string().optional(),
+  title: z
+    .string()
+    .min(3, "მინიმუმ 3 სიმბოლო")
+    .max(255, "მაქსიმუმ 255 სიმბოლო")
+    .nonempty("სათაური აუცილებელია"),
+
+  description: z
+    .string()
+    .max(255, "მაქსიმუმ 255 სიმბოლო")
+    .refine(
+      (val) => val.trim().split(/\s+/).length >= 4 || val.trim() === "",
+      "აღწერა უნდა შეიცავდეს მინიმუმ 4 სიტყვას"
+    ),
   priority_id: z.string().nonempty("პრიორიტეტი აუცილებელია"),
-  department_id: z.string().nonempty(),
+
+  status_id: z.string().nonempty("სტატუსი აუცილებელია"),
+
+  department_id: z.string().nonempty("დეპარტამენტი აუცილებელია"),
+
+  employee_id: z.string().nonempty("პასუხისმგებელი თანამშრომელი აუცილებელია"),
+
+  due_date: z
+    .string()
+    .nonempty("დედლაინი აუცილებელია")
+    .refine(
+      (date) =>
+        new Date(date) >=
+        new Date(new Date().setDate(new Date().getDate() + 1)),
+      "დედლაინი არ შეიძლება იყოს წარსული"
+    ),
 });
