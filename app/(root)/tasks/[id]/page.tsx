@@ -6,22 +6,21 @@ import { georgianWeekdays } from "@/constants";
 import { apiRequest } from "@/lib/actions";
 import Image from "next/image";
 
-const Task = async ({ params }: { params: { id: string } }) => {
-  const paramsId = await params.id;
+const Task = async (props: {
+  params: Promise<{
+    id: string;
+  }>;
+}) => {
+  const paramsId = (await props.params).id;
 
   const details: Task =
     (await apiRequest(`tasks/${paramsId}`, "GET")) || ({} as Task);
 
   const comments: comment[] = await apiRequest(
-    `tasks/${params.id}/comments`,
+    `tasks/${paramsId}/comments`,
     "GET"
   );
   const reversedComments = [...comments].reverse();
-
-  // const sortedComments = comments.sort(
-  //   (a, b) =>
-  //     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  // );
 
   const priority = details.priority.name;
 
@@ -66,12 +65,10 @@ const Task = async ({ params }: { params: { id: string } }) => {
                 <p className="text-base text-[#474747]">სტატუსი</p>
               </div>
 
-              {/* <div className="max-w-[259px]"> */}
               <StatusUpdater
-                taskId={params.id}
+                taskId={paramsId}
                 currentStatus={details.status.name}
               />
-              {/* </div> */}
             </div>
             <div className="flex items-center gap-[70px] h-[70px]">
               <div className="flex items-center gap-[6px]">
@@ -119,7 +116,7 @@ const Task = async ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="w-[741px] h-[975px] bg-[#F8F3FEA6] rounded-[10px] flex flex-col gap-[66px] pt-10 px-[45px]">
-        <AddComment taskId={params.id} />
+        <AddComment taskId={paramsId} />
 
         <div className="flex flex-col gap-10">
           <div className="flex gap-[7px] items-center">
@@ -134,7 +131,7 @@ const Task = async ({ params }: { params: { id: string } }) => {
               <CommentCard
                 key={comment.id}
                 comment={comment}
-                taskId={params.id}
+                taskId={paramsId}
               />
             ))}
           </div>
