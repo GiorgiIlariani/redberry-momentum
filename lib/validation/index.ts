@@ -46,11 +46,7 @@ export const CreateAssignmentFormSchema = z.object({
 
   due_date: z
     .string()
-    .nonempty("დედლაინი აუცილებელია")
     .refine(
-      (date) =>
-        new Date(date) >=
-        new Date(new Date().setDate(new Date().getDate() + 1)),
-      "დედლაინი არ შეიძლება იყოს წარსული"
+      (date) => new Date(date).getTime() >= new Date().setHours(0, 0, 0, 0)
     ),
 });

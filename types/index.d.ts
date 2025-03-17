@@ -80,6 +80,8 @@ declare interface FormFieldComponentProps {
   customLabelClass?: string;
   error?: any;
   addEmployee?: boolean;
+  open?: boolean;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 declare interface Task {

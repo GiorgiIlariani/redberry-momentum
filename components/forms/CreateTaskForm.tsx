@@ -12,32 +12,26 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { getValidationClass } from "@/utils";
-import { Textarea } from "../ui/textarea";
-import DropdownMenuComponent from "../shared/DropdownMenuComponent";
+
 import { DatePicker } from "../shared/DatePicker";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { apiRequest } from "@/lib/actions";
-import { useRouter } from "next/navigation";
-import FormFieldComponent from "../shared/FormFieldComponent";
 
-const CreateAssignmentForm = ({
+import { apiRequest } from "@/lib/actions";
+import { usePathname, useRouter } from "next/navigation";
+import FormFieldComponent from "../shared/FormFieldComponent";
+import { format, addDays } from "date-fns";
+
+const CreateTaskForm = ({
   departments,
   employees,
   statuses,
   priorities,
 }: CreateAssignmentFormProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const storedFormData = JSON.parse(
     (typeof window !== "undefined" && localStorage.getItem("formData")) || "{}"
@@ -48,7 +42,8 @@ const CreateAssignmentForm = ({
     defaultValues: {
       title: storedFormData.title || "",
       description: storedFormData.description || "",
-      due_date: storedFormData.due_date || new Date().toISOString(),
+      due_date:
+        storedFormData.due_date || format(addDays(new Date(), 1), "yyyy-MM-dd"),
       status_id: storedFormData.status_id || "1",
       employee_id: storedFormData.employee_id || "",
       priority_id: storedFormData.priority_id || "2",
@@ -60,6 +55,7 @@ const CreateAssignmentForm = ({
     values: z.infer<typeof CreateAssignmentFormSchema>
   ) => {
     try {
+      setIsLoading(true);
       const payload = {
         name: values.title,
         description: values.description,
@@ -72,12 +68,14 @@ const CreateAssignmentForm = ({
       const result = await apiRequest("tasks", "POST", payload, false);
 
       if (result) {
-        console.log("Assignment created successfully:", result);
-        // form.reset();
-        // router.push("/");
+        form.reset();
+        router.push("/");
+        typeof window !== "undefined" && localStorage.removeItem("formData");
       }
     } catch (error) {
       console.error("Failed to create assignment:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,9 +101,24 @@ const CreateAssignmentForm = ({
     return () => subscription.unsubscribe();
   }, [form]);
 
-  const error = form.formState.errors;
+  useEffect(() => {
+    if (storedFormData.department_id) {
+      setSelectedDepartment(storedFormData.department_id);
+    }
 
-  console.log({ error });
+    // Wait for selectedDepartment to be set, then update the form's employee_id
+    setTimeout(() => {
+      if (storedFormData.employee_id) {
+        form.setValue("employee_id", storedFormData.employee_id);
+      }
+    }, 0);
+  }, []);
+
+  useEffect(() => {
+    typeof window !== "undefined" && localStorage.removeItem("formData");
+  }, [pathname]);
+
+  const error = form.formState.errors;
 
   return (
     <div className="w-full flex flex-col">
@@ -128,6 +141,7 @@ const CreateAssignmentForm = ({
                       maxLength: "მაქსიმუმ 255 სიმბოლო",
                     },
                   }}
+                  error={error.title}
                 />
               </div>
               <div className="w-full flex-1">
@@ -150,14 +164,16 @@ const CreateAssignmentForm = ({
                   name="description"
                   label="აღწერა"
                   type="textarea"
+                  required
                   validation={{
                     minLength: 2,
                     maxLength: 255,
                     messages: {
-                      minLength: "მინიმუმ ორი სიმბოლო",
+                      minLength: "მინიმუმ ოთხი სიტყვა",
                       maxLength: "მაქსიმუმ 255 სიმბოლო",
                     },
                   }}
+                  error={error.description}
                 />
               </div>
               <div className="w-full flex-1">
@@ -172,7 +188,9 @@ const CreateAssignmentForm = ({
                   withAvatar
                   disabled={!form.watch("department_id")}
                   customLabelClass="text-[#ADB5BD]"
-                  // addEmploye={}
+                  addEmployee
+                  open={open}
+                  setOpen={setOpen}
                 />
               </div>
             </div>
@@ -210,17 +228,22 @@ const CreateAssignmentForm = ({
                   name="due_date"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base font-medium text-[#343A40]">
+                      <FormLabel className="text-sm text-[#343A40] font-medium">
                         დედლაინი*
                       </FormLabel>
-                      <FormControl className="w-full flex-1">
+                      <FormControl>
                         <DatePicker
+                          isDirty={form.getFieldState("due_date").isDirty}
+                          error={!form.getFieldState("due_date").error}
                           date={field.value ? new Date(field.value) : undefined}
-                          onChange={(selectedDate) =>
+                          onChange={(selectedDate) => {
                             field.onChange(
-                              selectedDate ? selectedDate.toISOString() : ""
-                            )
-                          }
+                              selectedDate
+                                ? format(selectedDate, "yyyy-MM-dd")
+                                : ""
+                            );
+                            form.trigger("due_date");
+                          }}
                         />
                       </FormControl>
                     </FormItem>
@@ -234,7 +257,7 @@ const CreateAssignmentForm = ({
                 type="submit"
                 className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center rounded-md mt-[145px]"
               >
-                დავალების შექმნა
+                {isLoading ? "იქმნება..." : "დავალების შექმნა"}
               </Button>
             </div>
           </div>
@@ -244,4 +267,4 @@ const CreateAssignmentForm = ({
   );
 };
 
-export default CreateAssignmentForm;
+export default CreateTaskForm;

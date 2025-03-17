@@ -65,7 +65,7 @@ export const DepartmentBadge: React.FC<DepartmentBadgeProps> = ({
 
   return (
     <div
-      className="w-[88px] text-center py-[5px] px-[9px] rounded-[15px] text-white text-xs"
+      className="text-center py-[5px] px-[9px] rounded-[15px] text-white text-xs"
       style={{ backgroundColor: bgColor }}
     >
       {shortName}

@@ -10,12 +10,10 @@ export const apiRequest = async (
   body?: any,
   isMultipart = false
 ) => {
-  console.log(process.env.NEXT_API_TOKEN);
-
   try {
     const headers: HeadersInit = {
       Accept: "application/json",
-      Authorization: `Bearer 9e6dd5f3-f37c-4841-a4bc-11d0151d91af`,
+      Authorization: `Bearer ${process.env.NEXT_API_TOKEN}`,
     };
 
     if (!isMultipart) {

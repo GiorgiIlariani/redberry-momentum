@@ -11,6 +11,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Checkbox } from "../ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 export function FilterMenubar({
   priorities,
@@ -24,47 +25,27 @@ export function FilterMenubar({
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null);
+  // Local state (does NOT update URL immediately)
+  const [departmentsTemp, setDepartmentsTemp] = useState<string[]>([]);
+  const [prioritiesTemp, setPrioritiesTemp] = useState<string[]>([]);
+  const [employeeTemp, setEmployeeTemp] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
-    setSelectedDepartments(params.get("departments")?.split(",") || []);
-    setSelectedPriorities(params.get("priorities")?.split(",") || []);
-    setSelectedEmployee(params.get("employees") || null);
+    setDepartmentsTemp(params.get("departments")?.split(",") || []);
+    setPrioritiesTemp(params.get("priorities")?.split(",") || []);
+    setEmployeeTemp(params.get("employee") || null);
   }, [searchParams]);
 
-  const updateURL = (key: string, value: string[]) => {
-    const params = new URLSearchParams(searchParams);
-    if (value.length) {
-      params.set(key, value.join(","));
-    } else {
-      params.delete(key);
-    }
+  const updateURL = () => {
+    const params = new URLSearchParams();
+    if (departmentsTemp.length)
+      params.set("departments", departmentsTemp.join(","));
+    if (prioritiesTemp.length)
+      params.set("priorities", prioritiesTemp.join(","));
+    if (employeeTemp) params.set("employee", employeeTemp);
+
     router.push(`?${params.toString()}`, { scroll: false });
-  };
-
-  const handleDepartmentChange = (id: string) => {
-    const updated = selectedDepartments.includes(id)
-      ? selectedDepartments.filter((d) => d !== id)
-      : [...selectedDepartments, id];
-    setSelectedDepartments(updated);
-    updateURL("departments", updated);
-  };
-
-  const handlePriorityChange = (id: string) => {
-    const updated = selectedPriorities.includes(id)
-      ? selectedPriorities.filter((p) => p !== id)
-      : [...selectedPriorities, id];
-    setSelectedPriorities(updated);
-    updateURL("priorities", updated);
-  };
-
-  const handleEmployeeChange = (id: string) => {
-    const updated = selectedEmployee === id ? null : id;
-    setSelectedEmployee(updated);
-    updateURL("employees", updated ? [updated] : []);
   };
 
   return (
@@ -74,17 +55,30 @@ export function FilterMenubar({
         <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center">
           დეპარტამენტი <IoIosArrowDown />
         </MenubarTrigger>
-        <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px]">
-          {departments.slice(0, 4).map((dept) => (
+        <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px]">
+          {departments.map((dept) => (
             <div className="flex items-center space-x-2" key={dept.id}>
               <Checkbox
                 id={String(dept.id)}
-                checked={selectedDepartments.includes(String(dept.id))}
-                onCheckedChange={() => handleDepartmentChange(String(dept.id))}
+                checked={departmentsTemp.includes(String(dept.id))}
+                onCheckedChange={() =>
+                  setDepartmentsTemp((prev) =>
+                    prev.includes(String(dept.id))
+                      ? prev.filter((d) => d !== String(dept.id))
+                      : [...prev, String(dept.id)]
+                  )
+                }
               />
               <label className="text-base text-[#212529]">{dept.name}</label>
             </div>
           ))}
+
+          <Button
+            onClick={updateURL}
+            className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
+          >
+            არჩევა
+          </Button>
         </MenubarContent>
       </MenubarMenu>
 
@@ -93,14 +87,21 @@ export function FilterMenubar({
         <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center">
           პრიორიტეტი <IoIosArrowDown />
         </MenubarTrigger>
-        <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px]">
+        <MenubarContent
+          align="center"
+          className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px]"
+        >
           {priorities.map((priority) => (
             <div className="flex items-center space-x-2" key={priority.id}>
               <Checkbox
                 id={String(priority.id)}
-                checked={selectedPriorities.includes(String(priority.id))}
+                checked={prioritiesTemp.includes(String(priority.id))}
                 onCheckedChange={() =>
-                  handlePriorityChange(String(priority.id))
+                  setPrioritiesTemp((prev) =>
+                    prev.includes(String(priority.id))
+                      ? prev.filter((p) => p !== String(priority.id))
+                      : [...prev, String(priority.id)]
+                  )
                 }
               />
               <label className="text-base text-[#212529]">
@@ -108,6 +109,12 @@ export function FilterMenubar({
               </label>
             </div>
           ))}
+          <Button
+            onClick={updateURL}
+            className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
+          >
+            არჩევა
+          </Button>
         </MenubarContent>
       </MenubarMenu>
 
@@ -116,14 +123,19 @@ export function FilterMenubar({
         <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center">
           თანამშრომელი <IoIosArrowDown />
         </MenubarTrigger>
-        <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px]">
+        <MenubarContent
+          align="end"
+          className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px]"
+        >
           {employees.map((employee) => (
             <div className="flex items-center space-x-2" key={employee.id}>
               <Checkbox
                 id={String(employee.id)}
-                checked={selectedEmployee === String(employee.id)}
+                checked={employeeTemp === String(employee.id)}
                 onCheckedChange={() =>
-                  handleEmployeeChange(String(employee.id))
+                  setEmployeeTemp((prev) =>
+                    prev === String(employee.id) ? null : String(employee.id)
+                  )
                 }
               />
               <div className="flex items-center gap-[10px]">
@@ -140,6 +152,12 @@ export function FilterMenubar({
               </div>
             </div>
           ))}
+          <Button
+            onClick={updateURL}
+            className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
+          >
+            არჩევა
+          </Button>
         </MenubarContent>
       </MenubarMenu>
     </Menubar>

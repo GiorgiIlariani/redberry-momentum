@@ -1,4 +1,4 @@
-import CreateAssignmentForm from "@/components/forms/CreateAssignmentForm";
+import CreateTaskForm from "@/components/forms/CreateTaskForm";
 import { apiRequest } from "@/lib/actions";
 import React from "react";
 
@@ -15,7 +15,7 @@ const CreateAssignment = async () => {
         შექმენი ახალი დავალება
       </h1>
 
-      <CreateAssignmentForm
+      <CreateTaskForm
         departments={departments}
         employees={employees}
         statuses={statuses}

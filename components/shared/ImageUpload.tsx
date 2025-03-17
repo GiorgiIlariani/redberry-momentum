@@ -17,8 +17,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onChange,
   onDelete,
 }) => {
-  // console.log(form.getValues());
-
   return (
     <div className="w-full flex flex-col gap-2 mt-[45px]">
       <Label
@@ -32,6 +30,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         className={`w-full flex justify-center items-center h-[120px] border border-dashed ${
           form.formState.errors.avatar ? "border-red-500" : "border-[#CED4DA]"
         }  rounded-lg cursor-pointer`}
+        htmlFor="avatar"
       >
         {image ? (
           <div className="relative w-max">
@@ -67,16 +66,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <p className="text-[#343A40] text-sm">ატვირთეთ ფოტო</p>
           </div>
         )}
-
-        <Input
-          type="file"
-          accept="image/*"
-          id="image"
-          className="border hidden"
-          {...form.register("avatar")}
-          onChange={(e) => onChange("image", e)}
-        />
       </Label>
+      <Input
+        type="file"
+        accept="image/*"
+        id="avatar"
+        className="border hidden"
+        {...form.register("avatar")}
+        onChange={(e) => onChange("image", e)}
+      />
     </div>
   );
 };
