@@ -3,30 +3,28 @@ import TaskCard from "@/components/shared/TaskCard"; // Adjust the path if neede
 import { statuses } from "@/constants";
 import { FilterMenubar } from "@/components/shared/FilterMenubar";
 
-const HomePage = async ({
-  searchParams,
-}: {
+const HomePage = async (props: {
   searchParams: Promise<{
     departments?: string;
     priorities?: string;
     employees?: string;
   }>;
 }) => {
-  const resolvedSearchParams = await searchParams; // Await before using properties
+  const searchParams = await props.searchParams; // Await searchParams properly
 
   const tasks = (await apiRequest("tasks", "GET")) || [];
   const departments = (await apiRequest("departments", "GET")) || [];
   const priority = (await apiRequest("priorities", "GET")) || [];
   const employees = (await apiRequest("employees", "GET")) || [];
 
-  const selectedDepartments = resolvedSearchParams.departments
-    ? resolvedSearchParams.departments.split(",").map(Number)
+  const selectedDepartments = searchParams.departments
+    ? searchParams.departments.split(",").map(Number)
     : [];
-  const selectedPriorities = resolvedSearchParams.priorities
-    ? resolvedSearchParams.priorities.split(",").map(Number)
+  const selectedPriorities = searchParams.priorities
+    ? searchParams.priorities.split(",").map(Number)
     : [];
-  const selectedEmployees = resolvedSearchParams.employees
-    ? resolvedSearchParams.employees.split(",").map(Number)
+  const selectedEmployees = searchParams.employees
+    ? searchParams.employees.split(",").map(Number)
     : [];
 
   return (
