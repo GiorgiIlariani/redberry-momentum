@@ -6,20 +6,19 @@ import { FilterMenubar } from "@/components/shared/FilterMenubar";
 const HomePage = async ({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     departments?: string;
     priorities?: string;
     employees?: string;
-  };
+  }>;
 }) => {
-  const resolvedSearchParams = await searchParams; // Await the promise
+  const resolvedSearchParams = await searchParams; // Await before using properties
 
   const tasks = (await apiRequest("tasks", "GET")) || [];
   const departments = (await apiRequest("departments", "GET")) || [];
   const priority = (await apiRequest("priorities", "GET")) || [];
   const employees = (await apiRequest("employees", "GET")) || [];
 
-  // Convert query parameters into arrays for filtering
   const selectedDepartments = resolvedSearchParams.departments
     ? resolvedSearchParams.departments.split(",").map(Number)
     : [];
