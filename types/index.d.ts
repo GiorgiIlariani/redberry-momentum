@@ -77,11 +77,8 @@ declare interface FormFieldComponentProps {
   onValueChange?: (value: string) => void; // 🔥 Allow handling value change
   validation?: ValidationRules;
   disabled?: boolean;
-  customLabelClass?: string;
   error?: any;
   addEmployee?: boolean;
-  open?: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 declare interface Task {
@@ -107,3 +104,40 @@ declare type comment = {
   author_nickname: string;
   sub_comments: Comment[]; // Recursive type for nested comments
 };
+
+declare type Filters = {
+  departments: number[];
+  priorities: number[];
+  employees: number[];
+};
+
+declare interface Task {
+  id: number;
+  name: string;
+  description: string;
+  due_date: string;
+  priority: { name: string };
+  department: { id: number; name: string };
+  employee: { name: string; avatar: string };
+  total_comments: number;
+}
+
+declare interface TaskCardProps {
+  task: Task;
+  statusColor: string;
+}
+
+declare interface PriorityBadgeProps {
+  priority: string;
+}
+
+declare interface DepartmentBadgeProps {
+  departmentName: string;
+}
+
+declare interface ImageUploadProps {
+  form: UseFormReturn<any>;
+  image: string | null;
+  onChange: (field: string, event: ChangeEvent<HTMLInputElement>) => void;
+  onDelete: () => void;
+}

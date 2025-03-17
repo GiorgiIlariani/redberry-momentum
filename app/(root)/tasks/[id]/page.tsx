@@ -2,34 +2,22 @@ import AddComment from "@/components/shared/AddComment";
 import CommentCard from "@/components/shared/CommentCard";
 import { DepartmentBadge, PriorityBadge } from "@/components/shared/TaskCard";
 import StatusUpdater from "@/components/shared/TaskStatusUpdater";
-import { georgianWeekdays } from "@/constants";
 import { apiRequest } from "@/lib/actions";
+import { parseDate } from "@/utils";
 import Image from "next/image";
 
-const Task = async (props: {
-  params: Promise<{
-    id: string;
-  }>;
-}) => {
-  const paramsId = (await props.params).id;
+const Task = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const paramsId = (await params).id;
 
-  const details: Task =
-    (await apiRequest(`tasks/${paramsId}`, "GET")) || ({} as Task);
+  const [details, comments] = await Promise.all([
+    apiRequest(`tasks/${paramsId}`, "GET"),
+    apiRequest(`tasks/${paramsId}/comments`, "GET"),
+  ]);
 
-  const comments: comment[] = await apiRequest(
-    `tasks/${paramsId}/comments`,
-    "GET"
-  );
-  const reversedComments = [...comments].reverse();
-
-  const priority = details.priority.name;
-
-  const dueDate = new Date(details.due_date);
-  const dayOfWeek = georgianWeekdays[dueDate.getDay()];
-  const formattedDueDate = `${dayOfWeek} - ${dueDate.toLocaleDateString()}`;
-
+  const formattedDueDate = parseDate(details.due_date);
   const commentLength = comments.reduce(
-    (sum, comment) => sum + comment.sub_comments.length + 1,
+    (sum: number, comment: comment) =>
+      sum + (comment.sub_comments?.length || 0) + 1,
     0
   );
 
@@ -44,80 +32,70 @@ const Task = async (props: {
           Redberry-ს საიტის ლენდინგის დიზაინი
         </h1>
         <p className="text-[#000000] mt-[26px]">
-          მიზანია რომ შეიქმნას თანამედროვე, სუფთა და ფუნქციონალური დიზაინი,
-          რომელიც უზრუნველყოფს მარტივ ნავიგაციას და მკაფიო ინფორმაციის
-          გადაცემას. დიზაინი უნდა იყოს ადაპტირებადი (responsive), გამორჩეული
-          ვიზუალით, მინიმალისტური სტილით და ნათელი ტიპოგრაფიით.
+          მიზანია რომ შეიქმნას თანამედროვე, სუფთა და ფუნქციონალური დიზაინი...
         </p>
 
         <div className="max-w-[493px] mt-[63px]">
           <h3 className="text-[#2A2A2A] font-medium">დავალების დეტალები</h3>
 
           <div className="w-full mt-[18px] flex flex-col">
-            <div className="flex items-center gap-[70px] h-[70px]">
-              <div className="flex items-center gap-[6px] w-[164px]">
-                <Image
-                  src="/assets/status.png"
-                  alt="status"
-                  width={24}
-                  height={24}
-                />
-                <p className="text-base text-[#474747]">სტატუსი</p>
-              </div>
-
-              <StatusUpdater
-                taskId={paramsId}
-                currentStatus={details.status.name}
-              />
-            </div>
-            <div className="flex items-center gap-[70px] h-[70px]">
-              <div className="flex items-center gap-[6px]">
-                <Image
-                  src="/assets/user.png"
-                  alt="status"
-                  width={24}
-                  height={24}
-                />
-                <p className="text-base text-[#474747]">თანამშრომელი</p>
-              </div>
-              <div className="flex items-end gap-3">
-                <Image
-                  src={details.employee.avatar}
-                  alt="employee"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-
-                <div className="flex flex-col gap-1">
-                  <p className="text-[11px] text-[#474747] font-light">
-                    {details.department.name}
-                  </p>
-                  <h4 className="text-sm text-[#0D0F10]">
-                    {details.employee.name}
-                  </h4>
+            {[
+              {
+                icon: "/assets/status.png",
+                label: "სტატუსი",
+                content: (
+                  <StatusUpdater
+                    taskId={paramsId}
+                    currentStatus={details.status.name}
+                  />
+                ),
+              },
+              {
+                icon: "/assets/user.png",
+                label: "თანამშრომელი",
+                content: (
+                  <div className="flex items-end gap-3">
+                    <Image
+                      src={details.employee.avatar}
+                      alt="employee"
+                      width={32}
+                      height={32}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col gap-1">
+                      <p className="text-[11px] text-[#474747] font-light">
+                        {details.department.name}
+                      </p>
+                      <h4 className="text-sm text-[#0D0F10]">
+                        {details.employee.name}
+                      </h4>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                icon: "/assets/calendar.png",
+                label: "დავალების ვადა",
+                content: formattedDueDate,
+              },
+            ].map(({ icon, label, content }) => (
+              <div
+                key={label}
+                className="flex items-center gap-[70px] h-[70px]"
+              >
+                <div className="flex items-center gap-[6px] w-[164px]">
+                  <Image src={icon} alt={label} width={24} height={24} />
+                  <p className="text-base text-[#474747] font-light">{label}</p>
                 </div>
+                {content}
               </div>
-            </div>
-            <div className="flex items-center gap-[70px] h-[70px]">
-              <div className="flex items-center gap-[6px]">
-                <Image
-                  src="/assets/calendar.png"
-                  alt="status"
-                  width={24}
-                  height={24}
-                />
-                <p className="text-base text-[#474747]">დავალების ვადა</p>
-              </div>
-              <div className="flex items-end gap-3">{formattedDueDate}</div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
       <div className="w-[741px] h-[975px] bg-[#F8F3FEA6] rounded-[10px] flex flex-col gap-[66px] pt-10 px-[45px]">
         <AddComment taskId={paramsId} />
-
         <div className="flex flex-col gap-10">
           <div className="flex gap-[7px] items-center">
             <h2 className="text-xl text-[#000000] font-medium">კომენტარები</h2>
@@ -125,9 +103,8 @@ const Task = async (props: {
               {commentLength}
             </div>
           </div>
-          {/* scrollbar-hide */}
-          <div className="flex flex-col gap-[38px] max-h-[618px] overflow-y-auto ">
-            {reversedComments.map((comment) => (
+          <div className="flex flex-col gap-[38px] max-h-[618px] overflow-y-auto">
+            {[...comments].reverse().map((comment) => (
               <CommentCard
                 key={comment.id}
                 comment={comment}

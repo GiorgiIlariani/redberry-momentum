@@ -1,31 +1,31 @@
 import { apiRequest } from "@/lib/actions";
-import TaskCard from "@/components/shared/TaskCard"; // Adjust the path if needed
+import TaskCard from "@/components/shared/TaskCard";
 import { statuses } from "@/constants";
 import { FilterMenubar } from "@/components/shared/FilterMenubar";
+import { filterTasksByStatus, parseSearchParams } from "@/utils";
 
-const HomePage = async (props: {
+const HomePage = async ({
+  searchParams,
+}: {
   searchParams: Promise<{
     departments?: string;
     priorities?: string;
     employees?: string;
   }>;
 }) => {
-  const searchParams = await props.searchParams; // Await searchParams properly
+  const params = await searchParams;
+  const [tasks, departments, priorities, employees] = await Promise.all([
+    apiRequest("tasks", "GET"),
+    apiRequest("departments", "GET"),
+    apiRequest("priorities", "GET"),
+    apiRequest("employees", "GET"),
+  ]);
 
-  const tasks = (await apiRequest("tasks", "GET")) || [];
-  const departments = (await apiRequest("departments", "GET")) || [];
-  const priority = (await apiRequest("priorities", "GET")) || [];
-  const employees = (await apiRequest("employees", "GET")) || [];
-
-  const selectedDepartments = searchParams.departments
-    ? searchParams.departments.split(",").map(Number)
-    : [];
-  const selectedPriorities = searchParams.priorities
-    ? searchParams.priorities.split(",").map(Number)
-    : [];
-  const selectedEmployees = searchParams.employees
-    ? searchParams.employees.split(",").map(Number)
-    : [];
+  const filters = {
+    departments: parseSearchParams(params.departments),
+    priorities: parseSearchParams(params.priorities),
+    employees: parseSearchParams(params.employees),
+  };
 
   return (
     <main className="w-full mt-10">
@@ -36,41 +36,25 @@ const HomePage = async (props: {
       <div className="mt-[52px]">
         <FilterMenubar
           departments={departments}
-          priorities={priority}
+          priorities={priorities}
           employees={employees}
         />
       </div>
 
       <div className="grid grid-cols-4 gap-4">
         {statuses.map((status) => {
-          const filteredTasks = tasks.filter((task: any) => {
-            const taskDepartment = task.department?.id;
-            const taskPriority = task.priority?.id;
-            const taskEmployee = task.employee?.id;
-
-            return (
-              (selectedDepartments.length === 0 ||
-                selectedDepartments.includes(taskDepartment)) &&
-              (selectedPriorities.length === 0 ||
-                selectedPriorities.includes(taskPriority)) &&
-              (selectedEmployees.length === 0 ||
-                selectedEmployees.includes(taskEmployee)) &&
-              task.status.name === status.name
-            );
-          });
+          const filteredTasks = filterTasksByStatus(tasks, status, filters);
 
           return (
             <div key={status.id}>
               <div
-                className={`py-[15px] px-2 rounded-[10px] text-white font-medium text-xl text-center`}
-                style={{
-                  backgroundColor: status.color,
-                }}
+                className="py-[15px] px-2 rounded-[10px] text-white font-medium text-xl text-center"
+                style={{ backgroundColor: status.color }}
               >
                 {status.name}
               </div>
               <div className="space-y-[30px] mt-[30px]">
-                {filteredTasks.map((task: any) => (
+                {filteredTasks.map((task) => (
                   <TaskCard
                     key={task.id}
                     task={task}

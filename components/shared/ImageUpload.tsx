@@ -1,15 +1,6 @@
 import Image from "next/image";
-import React, { ChangeEvent } from "react";
 import { Label } from "../ui/label";
-import { UseFormReturn } from "react-hook-form";
 import { Input } from "../ui/input";
-
-interface ImageUploadProps {
-  form: UseFormReturn<any>; // Replace 'any' with a specific form schema if available
-  image: string | null;
-  onChange: (field: string, event: ChangeEvent<HTMLInputElement>) => void;
-  onDelete: () => void;
-}
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   form,

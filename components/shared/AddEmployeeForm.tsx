@@ -14,7 +14,7 @@ import { DialogClose } from "../ui/dialog";
 import FormFieldComponent from "./FormFieldComponent";
 import ImageUpload from "./ImageUpload";
 
-const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
+const AddEmployeeForm = () => {
   const [image, setImage] = useState("");
   const [departments, setDepartments] = useState<
     { id: string; name: string }[]
@@ -80,7 +80,7 @@ const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
         console.log("Employee added successfully:", result);
         form.reset();
         setImage("");
-        onClose();
+        // onClose();
       }
     } catch (error) {
       console.error("Failed to add employee:", error);

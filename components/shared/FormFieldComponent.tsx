@@ -10,7 +10,6 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-  SelectLabel,
   SelectGroup,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -18,8 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { getValidationClass } from "@/utils";
 import { AddEmployeeModal } from "./AddEmployeeModal";
-import { AiOutlineCheck } from "react-icons/ai";
 import { CheckIcon } from "lucide-react";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 
 const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
   form,
@@ -34,11 +33,8 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
   onValueChange,
   validation,
   disabled,
-  customLabelClass,
   addEmployee,
   error,
-  open,
-  setOpen,
 }) => {
   return (
     <FormField
@@ -63,62 +59,71 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
             ) : type === "textarea" ? (
               <Textarea {...field} className="h-[133px] !ring-0 p-[14px]" />
             ) : (
-              <Select
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  if (onValueChange) onValueChange(value);
-                }}
-                value={field.value?.toString()}
-                disabled={disabled}
-              >
-                <SelectTrigger
-                  className={`w-full h-[45px]  ${
-                    form.formState.errors[name] ? "border-red-500" : ""
-                  }`}
+              <Dialog>
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    if (onValueChange) onValueChange(value);
+                  }}
+                  value={field.value?.toString()}
+                  disabled={disabled}
                 >
-                  <SelectValue placeholder={placeholder || "აირჩიეთ"} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {addEmployee &&
-                      open !== undefined &&
-                      setOpen !== undefined && (
-                        <AddEmployeeModal
-                          from="/create-assignment"
-                          open={open}
-                          setOpen={setOpen}
+                  <SelectTrigger
+                    className={`w-full h-[45px]  ${
+                      form.formState.errors[name] ? "border-red-500" : ""
+                    }`}
+                  >
+                    <SelectValue placeholder={placeholder || "აირჩიეთ"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {addEmployee && (
+                      <DialogTrigger className="w-full flex items-center gap-2 p-[14px] cursor-pointer hover:bg-gray-100 px-3 py-2">
+                        <Image
+                          src="/assets/plus-icon.png"
+                          alt="Add Employee"
+                          width={20}
+                          height={20}
                         />
-                      )}
-                    {options.map((option) => (
-                      <SelectItem
-                        key={option.id}
-                        value={option.id.toString()}
-                        className="flex items-center gap-2 p-[14px]"
-                      >
-                        {withAvatar && option.avatar && (
-                          <Image
-                            src={option.avatar}
-                            alt={option.name}
-                            width={28}
-                            height={28}
-                            className="w-[28px] h-[28px] rounded-full object-cover"
-                          />
-                        )}
-                        {withIcon && option.icon && (
-                          <Image
-                            src={option.icon}
-                            alt={option.name}
-                            width={20}
-                            height={20}
-                            className="w-5 h-5"
-                          />
-                        )}
-                        <span>{option.name}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                        <span className="text-[#8338EC] text-base">
+                          დაამატე თანამშრომელი
+                        </span>
+                      </DialogTrigger>
+                    )}
+
+                    <SelectGroup>
+                      {options.map((option) => (
+                        <SelectItem
+                          key={option.id}
+                          value={option.id.toString()}
+                          className="flex items-center gap-2 p-[14px]"
+                        >
+                          {withAvatar && option.avatar && (
+                            <Image
+                              src={option.avatar}
+                              alt={option.name}
+                              width={28}
+                              height={28}
+                              className="w-[28px] h-[28px] rounded-full object-cover"
+                            />
+                          )}
+                          {withIcon && option.icon && (
+                            <Image
+                              src={option.icon}
+                              alt={option.name}
+                              width={20}
+                              height={20}
+                              className="w-5 h-5"
+                            />
+                          )}
+                          <span>{option.name}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
+                <AddEmployeeModal />
+              </Dialog>
             )}
           </FormControl>
 

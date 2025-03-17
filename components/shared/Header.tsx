@@ -6,9 +6,10 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 
 const Header = () => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -37,7 +38,12 @@ const Header = () => {
       )}
 
       <div className="flex items-center gap-10">
-        <AddEmployeeModal open={open} setOpen={setOpen} from="/" />
+        <Dialog>
+          <DialogTrigger className="text-[#212529] px-5 bg-transparent hover:bg-transparent cursor-pointer border border-[#8338EC] h-[39px] rounded-[5px]">
+            თანამშრომლის შექმნა
+          </DialogTrigger>
+          <AddEmployeeModal />
+        </Dialog>
         <Link href="/create-assignment">
           <Button className="h-10 text-white px-5 py-[10px] bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center">
             <Image

@@ -23,14 +23,14 @@ const StatusUpdater = ({
   );
 
   const handleStatusChange = async (newStatusId: string) => {
-    const selectedStatus = statuses.find((s) => s.id === Number(newStatusId)); // Convert to number
+    const selectedStatus = statuses.find((s) => s.id === Number(newStatusId));
     if (!selectedStatus) return;
 
     setSelectedId(newStatusId);
 
     try {
       await apiRequest(`tasks/${taskId}`, "PUT", {
-        status_id: Number(newStatusId), // Ensure it's a number
+        status_id: Number(newStatusId),
       });
     } catch (error) {
       console.error("Failed to update status:", error);
@@ -39,7 +39,7 @@ const StatusUpdater = ({
 
   return (
     <Select onValueChange={handleStatusChange} value={String(selectedId)}>
-      <SelectTrigger className="w-[259px]">
+      <SelectTrigger className="h-[45px] w-[259px]">
         <SelectValue placeholder="აირჩიეთ სტატუსი" />
       </SelectTrigger>
       <SelectContent>

@@ -3,11 +3,12 @@ import { apiRequest } from "@/lib/actions";
 import React from "react";
 
 const CreateAssignment = async () => {
-  const departments = (await apiRequest("departments", "GET")) || [];
-  const employees = (await apiRequest("employees", "GET")) || [];
-
-  const statuses = (await apiRequest("statuses", "GET")) || [];
-  const priorities = (await apiRequest("priorities", "GET")) || [];
+  const [departments, employees, statuses, priorities] = await Promise.all([
+    apiRequest("departments", "GET"),
+    apiRequest("employees", "GET"),
+    apiRequest("statuses", "GET"),
+    apiRequest("priorities", "GET"),
+  ]);
 
   return (
     <main className="w-full mt-10 max-h-[958px] mb-[386px]">
@@ -16,10 +17,10 @@ const CreateAssignment = async () => {
       </h1>
 
       <CreateTaskForm
-        departments={departments}
-        employees={employees}
-        statuses={statuses}
-        priorities={priorities}
+        departments={departments || []}
+        employees={employees || []}
+        statuses={statuses || []}
+        priorities={priorities || []}
       />
     </main>
   );

@@ -32,6 +32,7 @@ const CreateTaskForm = ({
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [filteredEmployees, setFilteredEmployees] = useState(employees);
 
   const storedFormData = JSON.parse(
     (typeof window !== "undefined" && localStorage.getItem("formData")) || "{}"
@@ -78,8 +79,6 @@ const CreateTaskForm = ({
       setIsLoading(false);
     }
   };
-
-  const [filteredEmployees, setFilteredEmployees] = useState(employees);
 
   useEffect(() => {
     if (selectedDepartment) {
@@ -188,8 +187,6 @@ const CreateTaskForm = ({
                   withAvatar
                   disabled={!form.watch("department_id")}
                   addEmployee
-                  open={open}
-                  setOpen={setOpen}
                 />
               </div>
             </div>

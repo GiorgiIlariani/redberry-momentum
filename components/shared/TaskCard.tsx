@@ -3,26 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  due_date: string;
-  priority: { name: string };
-  department: { id: number; name: string };
-  employee: { name: string; avatar: string };
-  total_comments: number;
-}
-
-interface TaskCardProps {
-  task: Task;
-  statusColor: string;
-}
-
-interface PriorityBadgeProps {
-  priority: string;
-}
-
 export const PriorityBadge: React.FC<PriorityBadgeProps> = ({ priority }) => {
   const priorityImage =
     priority === "საშუალო" ? "Medium" : priority === "დაბალი" ? "Low" : "High";
@@ -52,10 +32,6 @@ export const PriorityBadge: React.FC<PriorityBadgeProps> = ({ priority }) => {
     </div>
   );
 };
-
-interface DepartmentBadgeProps {
-  departmentName: string;
-}
 
 export const DepartmentBadge: React.FC<DepartmentBadgeProps> = ({
   departmentName,
@@ -94,7 +70,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, statusColor }) => {
         <span className="text-[12px] text-[#212529]">{formattedDueDate}</span>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 h-[100px]">
         <h3 className="text-[15px] font-medium text-[#212529]">{task.name}</h3>
         <p className="text-sm text-[#343A40]">{truncatedDescription}</p>
       </div>

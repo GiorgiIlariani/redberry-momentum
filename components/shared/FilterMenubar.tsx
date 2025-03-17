@@ -106,7 +106,7 @@ export function FilterMenubar({
       <Menubar className="max-w-[688px] h-10 flex">
         {/* Departments */}
         <MenubarMenu>
-          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
+          <MenubarTrigger className="data-[state=open]:[&>*:last-child]:rotate-180 flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
             დეპარტამენტი{" "}
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
@@ -123,6 +123,7 @@ export function FilterMenubar({
                         : [...prev, String(dept.id)]
                     )
                   }
+                  className="!bg-white !text-black"
                 />
                 <label className="text-base text-[#212529]">{dept.name}</label>
               </div>
@@ -138,7 +139,7 @@ export function FilterMenubar({
 
         {/* Priorities */}
         <MenubarMenu>
-          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
+          <MenubarTrigger className="data-[state=open]:[&>*:last-child]:rotate-180 flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
             პრიორიტეტი{" "}
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
@@ -172,8 +173,8 @@ export function FilterMenubar({
 
         {/* Employees */}
         <MenubarMenu>
-          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
-            თანამშრომელი{" "}
+          <MenubarTrigger className="data-[state=open]:[&>*:last-child]:rotate-180 flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
+            თანამშრომელი
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
           <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]">

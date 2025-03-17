@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { apiRequest, addComment, addSubComment } from "@/lib/actions";
+import { addComment, addSubComment } from "@/lib/actions";
 
 export default function AddComment({
   taskId,
@@ -20,11 +20,10 @@ export default function AddComment({
 
     setLoading(true);
     try {
-      if (!parentId) {
-        const response = await addComment(taskId, comment);
-      }
-      if (parentId) await addSubComment(taskId, comment, parentId);
-      setComment(""); // Clear input after adding comment
+      parentId
+        ? await addSubComment(taskId, comment, parentId)
+        : await addComment(taskId, comment);
+      setComment("");
     } catch (error) {
       console.error("Failed to add comment:", error);
     } finally {
@@ -39,13 +38,12 @@ export default function AddComment({
         onChange={(e) => setComment(e.target.value)}
         placeholder="დაწერე კომენტარი"
         className="pl-5 pt-[18px] border-none rounded-lg 
-                   focus:outline-none focus:ring-0 focus:border-none 
-                   focus-visible:ring-0 focus-visible:border-transparent focus-visible:outline-none shadow-none"
+                   focus:outline-none focus:ring-0 shadow-none"
       />
       <Button
         onClick={handleAddComment}
         disabled={loading}
-        className="self-end px-4 py-2 text-white bg-[#8338EC] hover:bg-[#8338EC] rounded-[20px] cursor-pointer"
+        className="self-end px-4 py-2 text-white bg-[#8338EC] hover:bg-[#8338EC] rounded-[20px]"
       >
         {loading ? "Loading..." : "დააკომენტარე"}
       </Button>
