@@ -187,7 +187,6 @@ const CreateTaskForm = ({
                   required
                   withAvatar
                   disabled={!form.watch("department_id")}
-                  customLabelClass="text-[#ADB5BD]"
                   addEmployee
                   open={open}
                   setOpen={setOpen}

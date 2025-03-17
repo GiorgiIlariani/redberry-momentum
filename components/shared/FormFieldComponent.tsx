@@ -18,6 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { getValidationClass } from "@/utils";
 import { AddEmployeeModal } from "./AddEmployeeModal";
+import { AiOutlineCheck } from "react-icons/ai";
+import { CheckIcon } from "lucide-react";
 
 const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
   form,
@@ -45,9 +47,9 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
       render={({ field }) => (
         <FormItem>
           <FormLabel
-            className="text-base font-medium !text-[#343A40]"
+            className="text-base font-medium "
             style={{
-              color: disabled ? customLabelClass : "#343A40",
+              color: disabled && addEmployee ? "#ADB5BD" : "#343A40",
             }}
           >
             {label} {required && "*"}
@@ -70,7 +72,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                 disabled={disabled}
               >
                 <SelectTrigger
-                  className={`w-full ${
+                  className={`w-full h-[45px]  ${
                     form.formState.errors[name] ? "border-red-500" : ""
                   }`}
                 >
@@ -130,13 +132,12 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                     validation.maxLength
                   )}`}
                 >
-                  <Image
-                    src="/assets/check-icon.png"
-                    alt="Check Icon"
-                    width={16}
-                    height={16}
+                  <CheckIcon
+                    className={`w-4 h-4 ${error && "text-[#FA4D4D]"}`}
                   />
-                  <span>{validation.messages?.minLength}</span>
+                  <span className={`${error && "text-red-500"}`}>
+                    {validation.messages?.minLength}
+                  </span>
                 </div>
               )}
               {validation.maxLength && (
@@ -147,13 +148,13 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                     validation.maxLength
                   )}`}
                 >
-                  <Image
-                    src="/assets/check-icon.png"
-                    alt="Check Icon"
-                    width={16}
-                    height={16}
+                  <CheckIcon
+                    className={`w-4 h-4 ${error && "text-[#FA4D4D]"}`}
                   />
-                  <span>{validation.messages?.maxLength}</span>
+
+                  <span className={`${error && "text-[#FA4D4D]"}`}>
+                    {validation.messages?.maxLength}
+                  </span>
                 </div>
               )}
             </div>

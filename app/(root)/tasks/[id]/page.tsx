@@ -125,8 +125,8 @@ const Task = async (props: {
               {commentLength}
             </div>
           </div>
-
-          <div className="flex flex-col gap-[38px] max-h-[618px] overflow-y-auto scrollbar-hide">
+          {/* scrollbar-hide */}
+          <div className="flex flex-col gap-[38px] max-h-[618px] overflow-y-auto ">
             {reversedComments.map((comment) => (
               <CommentCard
                 key={comment.id}

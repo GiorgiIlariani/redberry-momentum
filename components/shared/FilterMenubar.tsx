@@ -38,9 +38,17 @@ export function FilterMenubar({
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
-    setDepartmentsTemp(params.get("departments")?.split(",") || []);
-    setPrioritiesTemp(params.get("priorities")?.split(",") || []);
-    setEmployeeTemp(params.get("employee") || null);
+    const departmentsFromParams = params.get("departments")?.split(",") || [];
+    const prioritiesFromParams = params.get("priorities")?.split(",") || [];
+    const employeeFromParams = params.get("employee") || null;
+
+    setDepartmentsTemp(departmentsFromParams);
+    setPrioritiesTemp(prioritiesFromParams);
+    setEmployeeTemp(employeeFromParams);
+
+    setAppliedDepartments(departmentsFromParams);
+    setAppliedPriorities(prioritiesFromParams);
+    setAppliedEmployee(employeeFromParams);
   }, [searchParams]);
 
   // Apply selected filters and update the URL
@@ -94,14 +102,15 @@ export function FilterMenubar({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <Menubar className="max-w-[688px] flex">
+    <div className="flex flex-col gap-4 mb-6">
+      <Menubar className="max-w-[688px] h-10 flex">
         {/* Departments */}
         <MenubarMenu>
-          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center">
-            დეპარტამენტი <IoIosArrowDown />
+          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
+            დეპარტამენტი{" "}
+            <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
-          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px]">
+          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]">
             {departments.map((dept) => (
               <div className="flex items-center space-x-2" key={dept.id}>
                 <Checkbox
@@ -129,10 +138,11 @@ export function FilterMenubar({
 
         {/* Priorities */}
         <MenubarMenu>
-          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center">
-            პრიორიტეტი <IoIosArrowDown />
+          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
+            პრიორიტეტი{" "}
+            <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
-          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px]">
+          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] border-[#8338EC]">
             {priorities.map((priority) => (
               <div className="flex items-center space-x-2" key={priority.id}>
                 <Checkbox
@@ -162,10 +172,11 @@ export function FilterMenubar({
 
         {/* Employees */}
         <MenubarMenu>
-          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center">
-            თანამშრომელი <IoIosArrowDown />
+          <MenubarTrigger className="flex flex-1 items-center gap-2 justify-center data-[state=open]:text-[#8338EC]">
+            თანამშრომელი{" "}
+            <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
-          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px]">
+          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]">
             {employees.map((employee) => (
               <div className="flex items-center space-x-2" key={employee.id}>
                 <Checkbox

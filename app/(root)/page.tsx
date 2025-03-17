@@ -41,7 +41,7 @@ const HomePage = async (props: {
         />
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mt-[79px]">
+      <div className="grid grid-cols-4 gap-4">
         {statuses.map((status) => {
           const filteredTasks = tasks.filter((task: any) => {
             const taskDepartment = task.department?.id;
@@ -69,7 +69,7 @@ const HomePage = async (props: {
               >
                 {status.name}
               </div>
-              <div className="p-2 space-y-[30px] mt-[30px]">
+              <div className="space-y-[30px] mt-[30px]">
                 {filteredTasks.map((task: any) => (
                   <TaskCard
                     key={task.id}

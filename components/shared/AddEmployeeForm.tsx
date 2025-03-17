@@ -87,6 +87,8 @@ const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
+  const error = form.formState.errors;
+
   return (
     <div className="w-full flex flex-col">
       <Form {...form}>
@@ -107,6 +109,7 @@ const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
                     maxLength: "მაქსიმუმ 255 სიმბოლო",
                   },
                 }}
+                error={error.name}
               />
             </div>
 
@@ -125,6 +128,7 @@ const AddEmployeeForm = ({ onClose }: { onClose: () => void }) => {
                     maxLength: "მაქსიმუმ 255 სიმბოლო",
                   },
                 }}
+                error={error.username}
               />
             </div>
           </div>

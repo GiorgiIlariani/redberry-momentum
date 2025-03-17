@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <header className="w-full flex justify-between py-[31px] px-[2px]">
       {isHome ? (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 cursor-pointer">
           <span className="text-[31px] text-[#8338EC]">Momentum</span>
           <Image
             src="/assets/header-logo.png"
@@ -39,7 +39,7 @@ const Header = () => {
       <div className="flex items-center gap-10">
         <AddEmployeeModal open={open} setOpen={setOpen} from="/" />
         <Link href="/create-assignment">
-          <Button className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center">
+          <Button className="h-10 text-white px-5 py-[10px] bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center">
             <Image
               src="/assets/add-icon.png"
               alt="add"
