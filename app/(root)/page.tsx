@@ -12,20 +12,22 @@ const HomePage = async ({
     employees?: string;
   };
 }) => {
+  const resolvedSearchParams = await searchParams; // Await the promise
+
   const tasks = (await apiRequest("tasks", "GET")) || [];
   const departments = (await apiRequest("departments", "GET")) || [];
   const priority = (await apiRequest("priorities", "GET")) || [];
   const employees = (await apiRequest("employees", "GET")) || [];
 
   // Convert query parameters into arrays for filtering
-  const selectedDepartments = searchParams.departments
-    ? searchParams.departments.split(",").map(Number)
+  const selectedDepartments = resolvedSearchParams.departments
+    ? resolvedSearchParams.departments.split(",").map(Number)
     : [];
-  const selectedPriorities = searchParams.priorities
-    ? searchParams.priorities.split(",").map(Number)
+  const selectedPriorities = resolvedSearchParams.priorities
+    ? resolvedSearchParams.priorities.split(",").map(Number)
     : [];
-  const selectedEmployees = searchParams.employees
-    ? searchParams.employees.split(",").map(Number)
+  const selectedEmployees = resolvedSearchParams.employees
+    ? resolvedSearchParams.employees.split(",").map(Number)
     : [];
 
   return (
