@@ -13,6 +13,7 @@ import { Checkbox } from "../ui/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { departmentShortNames } from "@/constants";
 
 export function FilterMenubar({
   priorities,
@@ -72,22 +73,27 @@ export function FilterMenubar({
     type: "departments" | "priorities" | "employee",
     value: string
   ) => {
+    let newDepartments = [...appliedDepartments];
+    let newPriorities = [...appliedPriorities];
+    let newEmployee = appliedEmployee;
+
     if (type === "departments") {
-      setAppliedDepartments((prev) => prev.filter((d) => d !== value));
+      newDepartments = newDepartments.filter((d) => d !== value);
+      setAppliedDepartments(newDepartments);
     } else if (type === "priorities") {
-      setAppliedPriorities((prev) => prev.filter((p) => p !== value));
+      newPriorities = newPriorities.filter((p) => p !== value);
+      setAppliedPriorities(newPriorities);
     } else {
+      newEmployee = null;
       setAppliedEmployee(null);
     }
 
-    // Update URL
+    // Update URL with new values
     const params = new URLSearchParams();
-    if (type !== "departments" && appliedDepartments.length)
-      params.set("departments", appliedDepartments.join(","));
-    if (type !== "priorities" && appliedPriorities.length)
-      params.set("priorities", appliedPriorities.join(","));
-    if (type !== "employee" && appliedEmployee)
-      params.set("employee", appliedEmployee);
+    if (newDepartments.length)
+      params.set("departments", newDepartments.join(","));
+    if (newPriorities.length) params.set("priorities", newPriorities.join(","));
+    if (newEmployee) params.set("employee", newEmployee);
 
     router.push(`?${params.toString()}`, { scroll: false });
   };
@@ -213,7 +219,6 @@ export function FilterMenubar({
         </MenubarMenu>
       </Menubar>
 
-      {/* Selected Filters Display */}
       <div className="flex flex-wrap gap-2">
         {/* Selected Filters Display */}
         {(appliedDepartments.length > 0 ||
@@ -222,12 +227,15 @@ export function FilterMenubar({
           <div className="flex flex-wrap gap-2">
             {appliedDepartments.map((id) => {
               const dept = departments.find((d) => String(d.id) === id);
+              const shortName = dept
+                ? departmentShortNames[dept.name] || dept.name
+                : "";
               return (
                 <span
                   key={id}
                   className="flex items-center gap-1 border border-[#CED4DA] py-[6px] px-[10px] rounded-[43px] text-sm text-[#343A40]"
                 >
-                  {dept?.name}
+                  {shortName}
                   <IoClose
                     className="cursor-pointer"
                     onClick={() => removeFilter("departments", id)}
