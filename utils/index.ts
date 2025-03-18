@@ -1,11 +1,13 @@
 import { georgianWeekdays } from "@/constants";
 
+// adds validation classes
 export const getValidationClass = (value: string, min: number, max: number) => {
-  if (!value) return "text-black"; // Default (Black)
-  if (value.length < min || value.length > max) return "text-red-500"; // Error (Red)
-  return "text-green-500"; // Success (Green)
+  if (!value) return "text-black";
+  if (value.length < min || value.length > max) return "text-[#FA4D4D]";
+  return "text-[#08A508]";
 };
 
+// handle file change for image upload
 export const handleFileChange = (fileProp: File | undefined) => {
   return new Promise((resolve, reject) => {
     const file = fileProp;
