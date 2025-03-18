@@ -30,7 +30,6 @@ export default function RootLayout({
       >
         <main className="max-w-[1684px] mx-auto">
           <Header />
-
           {children}
         </main>
       </body>

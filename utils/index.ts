@@ -1,9 +1,10 @@
 import { georgianWeekdays } from "@/constants";
 
-// adds validation classes
 export const getValidationClass = (value: string, min: number, max: number) => {
-  if (!value) return "text-black";
-  if (value.length < min || value.length > max) return "text-[#FA4D4D]";
+  const trimmedValue = value.trim();
+  if (!trimmedValue) return "text-black"; // Ignore empty or whitespace-only values
+  if (trimmedValue.length < min || trimmedValue.length > max)
+    return "text-[#FA4D4D]";
   return "text-[#08A508]";
 };
 

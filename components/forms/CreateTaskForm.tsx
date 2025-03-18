@@ -154,7 +154,7 @@ const CreateTaskForm = ({
                   required
                   onValueChange={(value) => {
                     setSelectedDepartment(value);
-                    form.setValue("employee_id", "");
+                    form.setValue("employee_id", ""); //
                   }}
                 />
               </div>

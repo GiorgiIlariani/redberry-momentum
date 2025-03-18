@@ -28,22 +28,16 @@ export const CreateAssignmentFormSchema = z.object({
     .min(3, "მინიმუმ 3 სიმბოლო")
     .max(255, "მაქსიმუმ 255 სიმბოლო")
     .nonempty("სათაური აუცილებელია"),
-
   description: z
     .string()
-    .max(255, "მაქსიმუმ 255 სიმბოლო")
+    .max(255)
     .refine(
-      (val) => val.trim().split(/\s+/).length >= 4 || val.trim() === "",
-      "აღწერა უნდა შეიცავდეს მინიმუმ 4 სიტყვას"
+      (desc) => desc.trim() === "" || desc.trim().split(/\s+/).length >= 4
     ),
   priority_id: z.string().nonempty("პრიორიტეტი აუცილებელია"),
-
   status_id: z.string().nonempty("სტატუსი აუცილებელია"),
-
   department_id: z.string().nonempty("დეპარტამენტი აუცილებელია"),
-
   employee_id: z.string().nonempty("პასუხისმგებელი თანამშრომელი აუცილებელია"),
-
   due_date: z
     .string()
     .refine(
