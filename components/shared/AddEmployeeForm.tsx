@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { addEmployee, apiRequest } from "@/lib/actions";
 import { DialogClose } from "../ui/dialog";
@@ -19,6 +19,7 @@ const AddEmployeeForm = () => {
   const [departments, setDepartments] = useState<
     { id: string; name: string }[]
   >([]);
+  const dialogCloseRef = useRef<HTMLButtonElement>(null); // Reference for closing modal
 
   const form = useForm<z.infer<typeof AddEmployeeFormSchema>>({
     resolver: zodResolver(AddEmployeeFormSchema),
@@ -34,10 +35,22 @@ const AddEmployeeForm = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      form.setValue("avatar", file, { shouldValidate: true }); // ✅ Pass actual file
+      const fileSizeInKB = file.size / 1024;
+
+      if (fileSizeInKB > 600) {
+        form.setError("avatar", {
+          type: "manual",
+          message: "ფაილის ზომა არ უნდა აღემატებოდეს 600 KB-ს",
+        });
+        return;
+      }
+
+      form.clearErrors("avatar"); // Clear error if a valid file is selected
+      form.setValue("avatar", file, { shouldValidate: true });
+
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string); // Only for preview
+        setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -77,10 +90,11 @@ const AddEmployeeForm = () => {
       console.log({ result });
 
       if (result) {
-        console.log("Employee added successfully:", result);
         form.reset();
         setImage("");
-        // onClose();
+
+        // Close modal only after successful request
+        dialogCloseRef.current?.click();
       }
     } catch (error) {
       console.error("Failed to add employee:", error);
@@ -152,19 +166,19 @@ const AddEmployeeForm = () => {
                   id: dept.id, // Matches Option interface
                   name: dept.name,
                 }))}
-                placeholder="აირჩიეთ დეპარტამენტი"
               />
             </div>
             <div className="flex-1" />
           </div>
 
           <div className="flex items-center gap-4 mt-[25px] justify-end">
-            <DialogClose className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center rounded-md">
+            <DialogClose ref={dialogCloseRef} className="hidden" />
+            <DialogClose className="bg-transparent hover:bg-transparent px-5 py-2 cursor-pointer border border-[#8338EC] gap-1 flex items-center rounded-md">
               გაუქმება
             </DialogClose>
             <Button
               type="submit"
-              className="text-[#212529] px-5 bg-transparent hover:bg-transparent cursor-pointer border border-[#8338EC] h-[39px]"
+              className="text-white bg-[#8338EC] hover:bg-[#8338EC] px-5 cursor-pointer border border-[#8338EC] h-[39px]"
             >
               დაამატე თანამშრომელი
             </Button>

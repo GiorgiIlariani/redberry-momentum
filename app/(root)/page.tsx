@@ -41,7 +41,7 @@ const HomePage = async ({
         />
       </div>
 
-      <div className="grid grid-cols-4 gap-4 pb-[152px]">
+      <div className="grid grid-cols-4 gap-[52px] pb-[152px]">
         {statuses.map((status) => {
           const filteredTasks = filterTasksByStatus(tasks, status, filters);
 

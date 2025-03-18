@@ -53,17 +53,35 @@ export function FilterMenubar({
   }, [searchParams]);
 
   // Apply selected filters and update the URL
-  const updateURL = () => {
-    setAppliedDepartments([...departmentsTemp]);
-    setAppliedPriorities([...prioritiesTemp]);
-    setAppliedEmployee(employeeTemp);
+  const updateURL = (filterType: "departments" | "priorities" | "employee") => {
+    const params = new URLSearchParams(searchParams);
 
-    const params = new URLSearchParams();
-    if (departmentsTemp.length)
-      params.set("departments", departmentsTemp.join(","));
-    if (prioritiesTemp.length)
-      params.set("priorities", prioritiesTemp.join(","));
-    if (employeeTemp) params.set("employee", employeeTemp);
+    if (filterType === "departments") {
+      setAppliedDepartments([...departmentsTemp]);
+      if (departmentsTemp.length) {
+        params.set("departments", departmentsTemp.join(","));
+      } else {
+        params.delete("departments");
+      }
+    }
+
+    if (filterType === "priorities") {
+      setAppliedPriorities([...prioritiesTemp]);
+      if (prioritiesTemp.length) {
+        params.set("priorities", prioritiesTemp.join(","));
+      } else {
+        params.delete("priorities");
+      }
+    }
+
+    if (filterType === "employee") {
+      setAppliedEmployee(employeeTemp);
+      if (employeeTemp) {
+        params.set("employee", employeeTemp);
+      } else {
+        params.delete("employee");
+      }
+    }
 
     router.push(`?${params.toString()}`, { scroll: false });
   };
@@ -135,7 +153,7 @@ export function FilterMenubar({
               </div>
             ))}
             <Button
-              onClick={updateURL}
+              onClick={() => updateURL("departments")}
               className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
             >
               არჩევა
@@ -169,7 +187,7 @@ export function FilterMenubar({
               </div>
             ))}
             <Button
-              onClick={updateURL}
+              onClick={() => updateURL("priorities")}
               className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
             >
               არჩევა
@@ -210,7 +228,7 @@ export function FilterMenubar({
               </div>
             ))}
             <Button
-              onClick={updateURL}
+              onClick={() => updateURL("employee")}
               className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
             >
               არჩევა

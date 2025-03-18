@@ -70,10 +70,14 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                 >
                   <SelectTrigger
                     className={`w-full h-[45px]  ${
-                      form.formState.errors[name] ? "border-red-500" : ""
+                      form.formState.errors[name]
+                        ? "border-red-500"
+                        : form.getFieldState(name).isDirty
+                        ? "border-[#08A508]"
+                        : ""
                     }`}
                   >
-                    <SelectValue placeholder={placeholder || "აირჩიეთ"} />
+                    <SelectValue placeholder={placeholder || ""} />
                   </SelectTrigger>
                   <SelectContent>
                     {addEmployee && (

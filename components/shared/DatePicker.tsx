@@ -34,7 +34,7 @@ export function DatePicker({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-auto p-0 bg-white" align="start">
+      <PopoverContent className="w-auto p-0 bg-white">
         <Calendar
           mode="single"
           selected={date}
