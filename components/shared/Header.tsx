@@ -51,7 +51,7 @@ const Header = () => {
           <AddEmployeeModal />
         </Dialog>
         <Link href="/create-task">
-          <Button className="h-10 text-white px-5 py-[10px] bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center">
+          <Button className="h-10 text-white px-5 py-[10px] bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer  gap-1 flex items-center">
             <Image
               src="/assets/add-icon.png"
               alt="add"

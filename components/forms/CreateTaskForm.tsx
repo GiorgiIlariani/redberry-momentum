@@ -28,6 +28,7 @@ const CreateTaskForm = ({
   priorities,
 }: CreateAssignmentFormProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [filteredEmployees, setFilteredEmployees] = useState(employees);
@@ -112,6 +113,10 @@ const CreateTaskForm = ({
     }, 0);
   }, []);
 
+  useEffect(() => {
+    typeof window !== undefined && sessionStorage.removeItem("formData");
+  }, [pathname]);
+
   const error = form.formState.errors;
 
   return (
@@ -147,7 +152,10 @@ const CreateTaskForm = ({
                   options={departments}
                   placeholder="დიზაინის დეპარტამენტი"
                   required
-                  onValueChange={(value) => setSelectedDepartment(value)} // 🔥 Update the selected department
+                  onValueChange={(value) => {
+                    setSelectedDepartment(value);
+                    form.setValue("employee_id", "");
+                  }}
                 />
               </div>
             </div>
