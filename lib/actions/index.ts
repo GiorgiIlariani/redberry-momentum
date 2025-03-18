@@ -67,6 +67,6 @@ export const addSubComment = async (
 
 export const addEmployee = async (formData: any) => {
   const response = await apiRequest("employees", "POST", formData, true);
-  revalidatePath(`/create-assignment`);
+  revalidatePath(`/create-task`);
   return response;
 };

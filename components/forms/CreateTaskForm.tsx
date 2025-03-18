@@ -17,7 +17,7 @@ import { DatePicker } from "../shared/DatePicker";
 import { useEffect, useState } from "react";
 
 import { apiRequest } from "@/lib/actions";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FormFieldComponent from "../shared/FormFieldComponent";
 import { format, addDays } from "date-fns";
 
@@ -28,14 +28,13 @@ const CreateTaskForm = ({
   priorities,
 }: CreateAssignmentFormProps) => {
   const router = useRouter();
-  const pathname = usePathname();
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
   const [filteredEmployees, setFilteredEmployees] = useState(employees);
 
   const storedFormData = JSON.parse(
-    (typeof window !== "undefined" && localStorage.getItem("formData")) || "{}"
+    (typeof window !== "undefined" && sessionStorage.getItem("formData")) ||
+      "{}"
   );
 
   const form = useForm<z.infer<typeof CreateAssignmentFormSchema>>({
@@ -71,7 +70,7 @@ const CreateTaskForm = ({
       if (result) {
         form.reset();
         router.push("/");
-        typeof window !== "undefined" && localStorage.removeItem("formData");
+        typeof window !== "undefined" && sessionStorage.removeItem("formData");
       }
     } catch (error) {
       console.error("Failed to create assignment:", error);
@@ -94,7 +93,7 @@ const CreateTaskForm = ({
   useEffect(() => {
     const subscription = form.watch((value) => {
       typeof window !== "undefined" &&
-        localStorage.setItem("formData", JSON.stringify(value));
+        sessionStorage.setItem("formData", JSON.stringify(value));
     });
 
     return () => subscription.unsubscribe();
@@ -112,10 +111,6 @@ const CreateTaskForm = ({
       }
     }, 0);
   }, []);
-
-  useEffect(() => {
-    typeof window !== "undefined" && localStorage.removeItem("formData");
-  }, [pathname]);
 
   const error = form.formState.errors;
 

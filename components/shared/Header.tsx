@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 
 const Header = () => {
-  // const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -26,7 +25,14 @@ const Header = () => {
           />
         </div>
       ) : (
-        <Link href="/" className="flex items-center gap-1">
+        <Link
+          href="/"
+          className="flex items-center gap-1"
+          onClick={() =>
+            typeof window !== "undefined" &&
+            sessionStorage.removeItem("formData")
+          }
+        >
           <span className="text-[31px] text-[#8338EC]">Momentum</span>
           <Image
             src="/assets/header-logo.png"
@@ -44,7 +50,7 @@ const Header = () => {
           </DialogTrigger>
           <AddEmployeeModal />
         </Dialog>
-        <Link href="/create-assignment">
+        <Link href="/create-task">
           <Button className="h-10 text-white px-5 py-[10px] bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] gap-1 flex items-center">
             <Image
               src="/assets/add-icon.png"
