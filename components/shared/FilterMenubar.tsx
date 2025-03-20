@@ -135,7 +135,7 @@ export function FilterMenubar({
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
           <MenubarContent
-            className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]"
+            className="rounded-[10px] border w-[688px] bg-white max-h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto border-[#8338EC]"
             align="start"
           >
             {departments.map((dept) => (
@@ -209,7 +209,7 @@ export function FilterMenubar({
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
           <MenubarContent
-            className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]"
+            className="rounded-[10px] border w-[688px] bg-white min-h-[274px] max-h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto border-[#8338EC]"
             align="end"
           >
             {employees.map((employee) => (
@@ -238,9 +238,14 @@ export function FilterMenubar({
                 </div>
               </div>
             ))}
+
             <Button
               onClick={() => updateURL("employee")}
-              className="text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] self-end mt-[25px] rounded-[20px]"
+              className={`text-white px-5 py-2 bg-[#8338EC] hover:bg-[#8338EC] cursor-pointer border border-[#8338EC] w-[155px] rounded-[20px] ${
+                employees.length <= 3
+                  ? "absolute bottom-8 right-5"
+                  : "self-end mt-[25px]"
+              }`}
             >
               არჩევა
             </Button>
