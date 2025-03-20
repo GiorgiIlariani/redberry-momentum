@@ -13,6 +13,7 @@ import { addEmployee, apiRequest } from "@/lib/actions";
 import { DialogClose } from "../ui/dialog";
 import FormFieldComponent from "../shared/FormFieldComponent";
 import ImageUpload from "../shared/ImageUpload";
+import { toast } from "sonner";
 
 const AddEmployeeForm = () => {
   const [image, setImage] = useState("");
@@ -95,6 +96,8 @@ const AddEmployeeForm = () => {
 
         // Close modal only after successful request
         dialogCloseRef.current?.click();
+
+        toast("თანამშრომელი წარმატებით შეიქმნა.");
       }
     } catch (error) {
       console.error("Failed to add employee:", error);

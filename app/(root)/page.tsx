@@ -27,8 +27,6 @@ const HomePage = async ({
     employees: parseSearchParams(params.employee),
   };
 
-  // console.log({ filters });
-
   return (
     <main className="w-full mt-10">
       <h1 className="text-[#212529] font-semibold text-[34px]">

@@ -129,7 +129,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                   </SelectContent>
                 </Select>
                 {form.formState.errors[name] && (
-                  <p className="text-[10px] text-red-500">სავალდებულო</p>
+                  <p className="text-sm text-red-500">სავალდებულო</p>
                 )}
 
                 <AddEmployeeModal />

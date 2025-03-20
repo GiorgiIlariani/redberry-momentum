@@ -20,6 +20,7 @@ import { apiRequest } from "@/lib/actions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import FormFieldComponent from "../shared/FormFieldComponent";
 import { format, addDays } from "date-fns";
+import { toast } from "sonner";
 
 const CreateTaskForm = ({
   departments,
@@ -71,6 +72,7 @@ const CreateTaskForm = ({
       if (result) {
         form.reset();
         router.push("/");
+        toast("დავალება წარმატებით შეიქმნა");
         typeof window !== "undefined" && sessionStorage.removeItem("formData");
       }
     } catch (error) {
