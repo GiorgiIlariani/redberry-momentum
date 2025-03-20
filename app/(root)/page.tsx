@@ -10,7 +10,7 @@ const HomePage = async ({
   searchParams: Promise<{
     departments?: string;
     priorities?: string;
-    employees?: string;
+    employee?: string;
   }>;
 }) => {
   const params = await searchParams;
@@ -24,8 +24,10 @@ const HomePage = async ({
   const filters = {
     departments: parseSearchParams(params.departments),
     priorities: parseSearchParams(params.priorities),
-    employees: parseSearchParams(params.employees),
+    employees: parseSearchParams(params.employee),
   };
+
+  // console.log({ filters });
 
   return (
     <main className="w-full mt-10">
@@ -44,6 +46,8 @@ const HomePage = async ({
       <div className="grid grid-cols-4 gap-[52px] pb-[152px]">
         {statuses.map((status) => {
           const filteredTasks = filterTasksByStatus(tasks, status, filters);
+
+          console.log({ filteredTasks });
 
           return (
             <div key={status.id}>

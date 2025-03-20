@@ -132,14 +132,8 @@ const CreateTaskForm = ({
                   name="title"
                   label="სათაური"
                   required
-                  validation={{
-                    minLength: 2,
-                    maxLength: 255,
-                    messages: {
-                      minLength: "მინიმუმ ორი სიმბოლო",
-                      maxLength: "მაქსიმუმ 255 სიმბოლო",
-                    },
-                  }}
+                  min={3}
+                  max={255}
                   error={error.title}
                 />
               </div>
@@ -167,15 +161,9 @@ const CreateTaskForm = ({
                   label="აღწერა"
                   type="textarea"
                   required
-                  validation={{
-                    minLength: 2,
-                    maxLength: 255,
-                    messages: {
-                      minLength: "მინიმუმ ოთხი სიტყვა",
-                      maxLength: "მაქსიმუმ 255 სიმბოლო",
-                    },
-                  }}
                   error={error.description}
+                  max={255}
+                  min={4}
                 />
               </div>
               <div className="w-full flex-1">
@@ -227,9 +215,9 @@ const CreateTaskForm = ({
                   name="due_date"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm text-[#343A40] font-medium">
+                      <label className="text-base text-[#343A40] font-normal">
                         დედლაინი*
-                      </FormLabel>
+                      </label>
                       <FormControl>
                         <DatePicker
                           isDirty={form.getFieldState("due_date").isDirty}

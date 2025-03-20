@@ -51,10 +51,16 @@ export const DepartmentBadge: React.FC<DepartmentBadgeProps> = ({
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, statusColor }) => {
   const formattedDueDate = new Date(task.due_date).toLocaleDateString();
+
+  const trimmedTitle =
+    task.name?.length > 35 ? `${task.name?.substring(0, 35)}...` : task.name;
+
   const truncatedDescription =
-    task.description.length > 100
-      ? `${task.description.substring(0, 100)}...`
+    task.description?.length > 100
+      ? `${task.description?.substring(0, 100)}...`
       : task.description;
+
+  console.log({ truncatedDescription });
 
   return (
     <Link
@@ -71,7 +77,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, statusColor }) => {
       </div>
 
       <div className="flex flex-col gap-3 h-[100px]">
-        <h3 className="text-[15px] font-medium text-[#212529]">{task.name}</h3>
+        <h3 className="text-[15px] font-medium text-[#212529]">
+          {trimmedTitle}
+        </h3>
         <p className="text-sm text-[#343A40]">{truncatedDescription}</p>
       </div>
 

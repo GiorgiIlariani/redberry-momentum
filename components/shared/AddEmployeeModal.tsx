@@ -1,13 +1,5 @@
-"use client";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import AddEmployeeForm from "./AddEmployeeForm";
-import Image from "next/image";
+import { DialogContent, DialogTitle } from "@/components/ui/dialog";
+import AddEmployeeForm from "../forms/AddEmployeeForm";
 
 export function AddEmployeeModal() {
   return (

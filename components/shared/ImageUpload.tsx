@@ -70,7 +70,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </div>
 
       {form.formState.errors.avatar && (
-        <p className="text-red-500 text-sm">
+        <p className="text-[#FA4D4D] text-sm h-[25px]">
           {form.formState.errors.avatar.message}
         </p>
       )}

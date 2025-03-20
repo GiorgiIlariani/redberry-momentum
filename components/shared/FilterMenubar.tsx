@@ -134,7 +134,10 @@ export function FilterMenubar({
             დეპარტამენტი{" "}
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
-          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]">
+          <MenubarContent
+            className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]"
+            align="start"
+          >
             {departments.map((dept) => (
               <div className="flex items-center space-x-2" key={dept.id}>
                 <Checkbox
@@ -167,7 +170,10 @@ export function FilterMenubar({
             პრიორიტეტი{" "}
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
-          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] border-[#8338EC]">
+          <MenubarContent
+            className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] border-[#8338EC]"
+            align="center"
+          >
             {priorities.map((priority) => (
               <div className="flex items-center space-x-2" key={priority.id}>
                 <Checkbox
@@ -180,6 +186,7 @@ export function FilterMenubar({
                         : [...prev, String(priority.id)]
                     )
                   }
+                  className="!bg-white !text-black"
                 />
                 <label className="text-base text-[#212529]">
                   {priority.name}
@@ -201,7 +208,10 @@ export function FilterMenubar({
             თანამშრომელი
             <IoIosArrowDown className="data-[state=open]:text-[#8338EC]" />
           </MenubarTrigger>
-          <MenubarContent className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]">
+          <MenubarContent
+            className="rounded-[10px] border w-[688px] bg-white h-[274px] px-[30px] pt-10 pb-5 flex flex-col gap-[22px] overflow-y-auto max-h-[224px] border-[#8338EC]"
+            align="end"
+          >
             {employees.map((employee) => (
               <div className="flex items-center space-x-2" key={employee.id}>
                 <Checkbox
@@ -212,6 +222,7 @@ export function FilterMenubar({
                       prev === String(employee.id) ? null : String(employee.id)
                     )
                   }
+                  className="!bg-white !text-black"
                 />
                 <div className="flex items-center gap-[10px]">
                   <Image

@@ -15,10 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-import { getValidationClass } from "@/utils";
+// import { getValidationClass } from "@/utils";
 import { AddEmployeeModal } from "./AddEmployeeModal";
 import { CheckIcon } from "lucide-react";
 import { Dialog, DialogTrigger } from "../ui/dialog";
+import { generateValidationStyles } from "@/utils";
 
 const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
   form,
@@ -31,10 +32,12 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
   withAvatar = false,
   withIcon = false,
   onValueChange,
-  validation,
   disabled,
   addEmployee,
   error,
+  min,
+  letters = false,
+  max,
 }) => {
   return (
     <FormField
@@ -81,7 +84,7 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     {addEmployee && (
-                      <DialogTrigger className="w-full flex items-center gap-2 p-[14px] cursor-pointer hover:bg-gray-100 px-3 py-2">
+                      <DialogTrigger className="w-full flex items-center gap-2 p-[14px] cursor-pointer hover:bg-gray-100">
                         <Image
                           src="/assets/plus-icon.png"
                           alt="Add Employee"
@@ -125,46 +128,77 @@ const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+                {form.formState.errors[name] && (
+                  <p className="text-[10px] text-red-500">სავალდებულო</p>
+                )}
 
                 <AddEmployeeModal />
               </Dialog>
             )}
           </FormControl>
 
-          {validation && (
-            <div className="text-sm mt-1 space-y-1">
-              {validation.minLength && (
-                <div
-                  className={`flex items-center gap-2 ${getValidationClass(
+          {(type === "input" || type === "textarea") && (
+            <div>
+              {type === "input" && (
+                <p
+                  className={`flex items-center gap-1 text-[10px] font-[350] ${
+                    error && "text-[#FA4D4D]"
+                  } ${generateValidationStyles(
+                    form.getFieldState(name).isDirty,
                     field.value,
-                    validation.minLength,
-                    validation.maxLength
+                    min!,
+                    "min",
+                    "input"
                   )}`}
                 >
-                  <CheckIcon
-                    className={`w-4 h-4 ${error && "text-[#FA4D4D]"}`}
-                  />
-                  <span className={`${error && "text-red-500"}`}>
-                    {validation.messages?.minLength}
-                  </span>
-                </div>
+                  <CheckIcon className="w-4 h-4" /> მინიმუმ {min} სიმბოლი
+                </p>
               )}
-              {validation.maxLength && (
-                <div
-                  className={`flex items-center gap-2 ${getValidationClass(
+
+              <p
+                className={`flex items-center gap-1 text-[10px] font-[350]  ${
+                  error && "text-[#FA4D4D]"
+                } ${generateValidationStyles(
+                  form.getFieldState(name).isDirty,
+                  field.value,
+                  min!,
+                  "max",
+                  "input"
+                )}`}
+              >
+                <CheckIcon className="w-4 h-4" /> მაქსიმუმ {max} სიმბოლი
+              </p>
+              {letters && (
+                <p
+                  className={`flex items-center gap-1 text-[10px] font-[350] ${
+                    error && "text-[#FA4D4D]"
+                  } ${generateValidationStyles(
+                    form.getFieldState(name).isDirty,
                     field.value,
-                    validation.minLength,
-                    validation.maxLength
+                    min!,
+                    "letters",
+                    "input"
                   )}`}
                 >
-                  <CheckIcon
-                    className={`w-4 h-4 ${error && "text-[#FA4D4D]"}`}
-                  />
+                  <CheckIcon className="w-4 h-4" /> მხოლოდ ქართული ან ლათინური
+                  ასოები
+                </p>
+              )}
 
-                  <span className={`${error && "text-[#FA4D4D]"}`}>
-                    {validation.messages?.maxLength}
-                  </span>
-                </div>
+              {type === "textarea" && (
+                <p
+                  className={`flex items-center gap-1 text-[10px] font-[350] ${
+                    error && "text-[#FA4D4D]"
+                  } ${generateValidationStyles(
+                    form.getFieldState(name).isDirty,
+                    field.value,
+                    min!,
+                    "letters",
+                    "textarea"
+                  )}`}
+                >
+                  <CheckIcon className="w-4 h-4" /> მინიმუმ 4 სიტყვა
+                </p>
               )}
             </div>
           )}

@@ -11,8 +11,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { addEmployee, apiRequest } from "@/lib/actions";
 import { DialogClose } from "../ui/dialog";
-import FormFieldComponent from "./FormFieldComponent";
-import ImageUpload from "./ImageUpload";
+import FormFieldComponent from "../shared/FormFieldComponent";
+import ImageUpload from "../shared/ImageUpload";
 
 const AddEmployeeForm = () => {
   const [image, setImage] = useState("");
@@ -115,14 +115,9 @@ const AddEmployeeForm = () => {
                 label="სახელი"
                 type="input"
                 required
-                validation={{
-                  minLength: 2,
-                  maxLength: 255,
-                  messages: {
-                    minLength: "მინიმუმ ორი სიმბოლო",
-                    maxLength: "მაქსიმუმ 255 სიმბოლო",
-                  },
-                }}
+                min={2}
+                max={255}
+                letters
                 error={error.name}
               />
             </div>
@@ -134,14 +129,9 @@ const AddEmployeeForm = () => {
                 label="გვარი"
                 type="input"
                 required
-                validation={{
-                  minLength: 2,
-                  maxLength: 255,
-                  messages: {
-                    minLength: "მინიმუმ ორი სიმბოლო",
-                    maxLength: "მაქსიმუმ 255 სიმბოლო",
-                  },
-                }}
+                min={2}
+                max={255}
+                letters
                 error={error.username}
               />
             </div>
@@ -154,7 +144,7 @@ const AddEmployeeForm = () => {
             onDelete={onDelete}
           />
 
-          <div className="w-full flex items-center gap-[45px] mt-[45px]">
+          <div className="w-full flex items-center gap-[45px] mt-[25px]">
             <div className="flex-1">
               <FormFieldComponent
                 form={form}
@@ -163,7 +153,7 @@ const AddEmployeeForm = () => {
                 type="select"
                 required
                 options={departments.map((dept) => ({
-                  id: dept.id, // Matches Option interface
+                  id: dept.id,
                   name: dept.name,
                 }))}
               />

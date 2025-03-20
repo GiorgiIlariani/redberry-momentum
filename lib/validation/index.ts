@@ -1,14 +1,20 @@
 import { z } from "zod";
 
+const regex = /^[a-zA-Zა-ჰ\s]+$/;
+
 export const AddEmployeeFormSchema = z.object({
   name: z
     .string()
-    .min(2, "მინიმუმ ორი სიმბოლო")
-    .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ლათინური და ქართული ასოებია დაშვებული"),
+    .min(2)
+    .max(255)
+    .regex(regex)
+    .refine((val) => val.trim().replace(/\s+/g, "").length > 1),
   username: z
     .string()
-    .min(2, "მინიმუმ ორი სიმბოლო")
-    .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ლათინური და ქართული ასოებია დაშვებული"),
+    .min(2)
+    .max(255)
+    .regex(regex)
+    .refine((val) => val.trim().replace(/\s+/g, "").length > 1),
   avatar: z
     .instanceof(File, { message: "სურათი აუცილებელია" })
     .refine((file) => file.size <= 600 * 1024, {
@@ -25,9 +31,9 @@ export const AddEmployeeFormSchema = z.object({
 export const CreateAssignmentFormSchema = z.object({
   title: z
     .string()
-    .min(3, "მინიმუმ 3 სიმბოლო")
-    .max(255, "მაქსიმუმ 255 სიმბოლო")
-    .nonempty("სათაური აუცილებელია"),
+    .min(3)
+    .max(255)
+    .refine((val) => val.trim().replace(/\s+/g, "").length > 2),
   description: z
     .string()
     .max(255)

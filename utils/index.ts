@@ -1,11 +1,46 @@
 import { georgianWeekdays } from "@/constants";
 
-export const getValidationClass = (value: string, min: number, max: number) => {
-  const trimmedValue = value.trim();
-  if (!trimmedValue) return "text-black"; // Ignore empty or whitespace-only values
-  if (trimmedValue.length < min || trimmedValue.length > max)
-    return "text-[#FA4D4D]";
-  return "text-[#08A508]";
+export const generateValidationStyles = (
+  isDirty: boolean,
+  value: string,
+  min: number,
+  validationType: "min" | "max" | "letters",
+  type: "input" | "textarea"
+) => {
+  if (type === "input") {
+    if (validationType === "min") {
+      if (value.replace(/\s/g, "").length < min && isDirty)
+        return "!text-[#FA4D4D]";
+      if (value.replace(/\s/g, "").length >= min) return "!text-[#08A508]";
+    } else if (validationType === "max") {
+      if (
+        (value.trim().length > 255 && isDirty) ||
+        (!value.trim().length && isDirty)
+      )
+        return "!text-[#FA4D4D]";
+      if (value.trim().length) return "!text-[#08A508]";
+    } else {
+      if (!/^[a-zA-Zა-ჰ\s]+$/.test(value.trim()) && isDirty) {
+        return "!text-[#FA4D4D]";
+      } else if (/^[a-zA-Zა-ჰ\s]+$/.test(value.trim())) {
+        return "!text-[#08A508]";
+      }
+    }
+
+    return "text-[#6C757D]";
+  }
+
+  if (type === "textarea") {
+    const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+
+    if (wordCount < min && isDirty) {
+      return "!text-[#FA4D4D]";
+    } else if (wordCount >= 4) {
+      return "!text-[#08A508]";
+    }
+
+    return "text-[#6C757D]";
+  }
 };
 
 // handle file change for image upload

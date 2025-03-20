@@ -55,15 +55,6 @@ interface Option {
   avatar?: string; // For employees
 }
 
-interface ValidationRules {
-  minLength: number; // Ensure it's always required
-  maxLength: number;
-  messages?: {
-    minLength?: string;
-    maxLength?: string;
-  };
-}
-
 declare interface FormFieldComponentProps {
   form: any;
   name: string;
@@ -75,10 +66,12 @@ declare interface FormFieldComponentProps {
   withAvatar?: boolean;
   withIcon?: boolean;
   onValueChange?: (value: string) => void; // 🔥 Allow handling value change
-  validation?: ValidationRules;
   disabled?: boolean;
   error?: any;
   addEmployee?: boolean;
+  min?: number;
+  max?: number;
+  letters?: boolean;
 }
 
 declare interface Task {
