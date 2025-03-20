@@ -15,6 +15,7 @@ const Task = async ({ params }: { params: Promise<{ id: string }> }) => {
   ]);
 
   const formattedDueDate = parseDate(details.due_date);
+
   const commentLength = comments.reduce(
     (sum: number, comment: comment) =>
       sum + (comment.sub_comments?.length || 0) + 1,
@@ -104,7 +105,7 @@ const Task = async ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
           </div>
           <div className="flex flex-col gap-[38px] max-h-[618px] overflow-y-auto">
-            {[...comments].reverse().map((comment) => (
+            {comments.map((comment: comment) => (
               <CommentCard
                 key={comment.id}
                 comment={comment}
