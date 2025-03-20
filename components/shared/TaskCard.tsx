@@ -60,8 +60,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, statusColor }) => {
       ? `${task.description?.substring(0, 100)}...`
       : task.description;
 
-  console.log({ truncatedDescription });
-
   return (
     <Link
       href={`/tasks/${task.id}`}

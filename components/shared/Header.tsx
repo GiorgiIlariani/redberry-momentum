@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import { AddEmployeeModal } from "./AddEmployeeModal";
 import { Button } from "../ui/button";
 import Image from "next/image";

@@ -45,8 +45,6 @@ const HomePage = async ({
         {statuses.map((status) => {
           const filteredTasks = filterTasksByStatus(tasks, status, filters);
 
-          console.log({ filteredTasks });
-
           return (
             <div key={status.id}>
               <div

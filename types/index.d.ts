@@ -1,7 +1,7 @@
 declare type createNewEmployeeProps = {
   name: string;
   surname: string;
-  avatarFile: File; // Corrected type from `string` to `File`
+  avatarFile: File;
   departmentId: string;
 };
 
@@ -51,8 +51,8 @@ declare type CreateAssignmentFormProps = {
 interface Option {
   id: string | number;
   name: string;
-  icon?: string; // For priorities
-  avatar?: string; // For employees
+  icon?: string;
+  avatar?: string;
 }
 
 declare interface FormFieldComponentProps {

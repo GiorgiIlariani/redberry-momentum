@@ -1,5 +1,6 @@
 import { georgianWeekdays } from "@/constants";
 
+// generates validation styles
 export const generateValidationStyles = (
   isDirty: boolean,
   value: string,
@@ -7,40 +8,43 @@ export const generateValidationStyles = (
   validationType: "min" | "max" | "letters",
   type: "input" | "textarea"
 ) => {
+  const trimmedValue = value.trim();
+  const valueLength = trimmedValue.length;
+  const wordCount = trimmedValue.split(/\s+/).filter(Boolean).length;
+
   if (type === "input") {
     if (validationType === "min") {
-      if (value.replace(/\s/g, "").length < min && isDirty)
-        return "!text-[#FA4D4D]";
-      if (value.replace(/\s/g, "").length >= min) return "!text-[#08A508]";
-    } else if (validationType === "max") {
-      if (
-        (value.trim().length > 255 && isDirty) ||
-        (!value.trim().length && isDirty)
-      )
-        return "!text-[#FA4D4D]";
-      if (value.trim().length) return "!text-[#08A508]";
-    } else {
-      if (!/^[a-zA-Zა-ჰ\s]+$/.test(value.trim()) && isDirty) {
-        return "!text-[#FA4D4D]";
-      } else if (/^[a-zA-Zა-ჰ\s]+$/.test(value.trim())) {
-        return "!text-[#08A508]";
-      }
+      return value.replace(/\s/g, "").length < min && isDirty
+        ? "!text-[#FA4D4D]"
+        : valueLength >= min
+        ? "!text-[#08A508]"
+        : "text-[#6C757D]";
     }
 
-    return "text-[#6C757D]";
+    if (validationType === "max") {
+      if ((valueLength > 255 || !valueLength) && isDirty)
+        return "!text-[#FA4D4D]";
+      return valueLength ? "!text-[#08A508]" : "text-[#6C757D]";
+    }
+
+    if (validationType === "letters") {
+      return !/^[a-zA-Zა-ჰ\s]+$/.test(trimmedValue) && isDirty
+        ? "!text-[#FA4D4D]"
+        : /^[a-zA-Zა-ჰ\s]+$/.test(trimmedValue)
+        ? "!text-[#08A508]"
+        : "text-[#6C757D]";
+    }
   }
 
   if (type === "textarea") {
-    const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
-
-    if (wordCount < min && isDirty) {
-      return "!text-[#FA4D4D]";
-    } else if (wordCount >= 4) {
-      return "!text-[#08A508]";
-    }
-
-    return "text-[#6C757D]";
+    return wordCount < min && isDirty
+      ? "!text-[#FA4D4D]"
+      : wordCount >= 4
+      ? "!text-[#08A508]"
+      : "text-[#6C757D]";
   }
+
+  return "text-[#6C757D]";
 };
 
 // handle file change for image upload

@@ -14,7 +14,6 @@ const DropdownMenuComponent = ({ employees }: { employees: employee[] }) => {
       }`}
       ></DropdownMenuTrigger>
       <DropdownMenuContent className="w-[385px]">
-        {/* <AddAgentModal type="from-addListing" /> */}
         {employees.map((employee) => (
           <DropdownMenuItem
             key={employee.id}

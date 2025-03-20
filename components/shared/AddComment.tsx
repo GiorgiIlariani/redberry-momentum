@@ -45,7 +45,7 @@ export default function AddComment({
         value={comment}
         onChange={(e) => {
           setComment(e.target.value);
-          if (error) setError(""); // Clear error when user starts typing
+          if (error) setError("");
         }}
         placeholder="დაწერე კომენტარი"
         className="pl-5 pt-[18px] !border-none !shadow-none !ring-0 !focus:ring-0 !focus-visible:ring-0 !outline-none"

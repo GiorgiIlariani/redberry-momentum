@@ -5,19 +5,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
 import { DatePicker } from "../shared/DatePicker";
 import { useEffect, useState } from "react";
 
 import { apiRequest } from "@/lib/actions";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import FormFieldComponent from "../shared/FormFieldComponent";
 import { format, addDays } from "date-fns";
 import { toast } from "sonner";
@@ -62,7 +56,7 @@ const CreateTaskForm = ({
         name: values.title,
         description: values.description,
         due_date: new Date(values.due_date).toISOString().split("T")[0],
-        status_id: Number(values.status_id), // Ensure these are numbers
+        status_id: Number(values.status_id),
         employee_id: Number(values.employee_id),
         priority_id: Number(values.priority_id),
       };

@@ -88,8 +88,6 @@ const AddEmployeeForm = () => {
 
       const result = await addEmployee(formData);
 
-      console.log({ result });
-
       if (result) {
         form.reset();
         setImage("");
